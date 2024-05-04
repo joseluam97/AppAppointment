@@ -1,22 +1,30 @@
-import { AppointmentDataType, TypeAppointmentDataType } from "../../screens/dates/types";
+import { AppointmentDataType, TypeAppointmentDataType, BreedDataType, TimeAvailableForAppointment } from "../../screens/dates/types";
 import { createReducer } from "@reduxjs/toolkit";
-import { getAllApointmentAPIAction, getAllTypesApointmentAPIAction } from "./actions";
 import {
-  GET_APPOINTMENT,
-  GET_APPOINTMENT_EXITO,
-  GET_APPOINTMENT_ERROR,
-} from "./types";
+  getAllApointmentAPIAction,
+  getAllTypesApointmentAPIAction,
+  getAllBreedAPIAction,
+  getTypesApointmentByBreedAPIAction,
+  getTimeAvailableAppointmentAPIAction,
+  postAppointmentAPIAction
+} from "./actions";
 
 type InitialStateType = {
+  resultPost: boolean;
   loggedin: boolean;
-  listAppointment: AppointmentDataType[] | undefined;
-  listTypeAppointment: TypeAppointmentDataType[] | undefined;
+  listAppointmentAPI: AppointmentDataType[] | undefined;
+  listTypeAppointmentAPI: TypeAppointmentDataType[] | undefined;
+  listBreedAPI: BreedDataType[] | undefined;
+  listTimeAppointmentAvailable: TimeAvailableForAppointment[] | undefined;
 };
 
 const initialState: InitialStateType = {
+  resultPost: false,
   loggedin: false,
-  listAppointment: undefined,
-  listTypeAppointment: undefined,
+  listAppointmentAPI: [],
+  listTypeAppointmentAPI: [],
+  listBreedAPI: [],
+  listTimeAppointmentAvailable: []
 };
 
 export default createReducer(initialState, (builder) => {
@@ -25,14 +33,41 @@ export default createReducer(initialState, (builder) => {
       return {
         ...state,
         loggedin: true,
-        listAppointment: { ...action.payload }
+        listAppointmentAPI: { ...action.payload },
+      };
+    })
+    .addCase(postAppointmentAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        resultPost: true,
+      };
+    })
+    .addCase(getTimeAvailableAppointmentAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        loggedin: true,
+        listTimeAppointmentAvailable: { ...action.payload },
       };
     })
     .addCase(getAllTypesApointmentAPIAction.fulfilled, (state, action) => {
       return {
         ...state,
         loggedin: true,
-        listTypeAppointment: { ...action.payload }
+        listTypeAppointmentAPI: { ...action.payload },
+      };
+    })
+    .addCase(getTypesApointmentByBreedAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        loggedin: true,
+        listTypeAppointmentAPI: { ...action.payload },
+      };
+    })
+    .addCase(getAllBreedAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        loggedin: true,
+        listBreedAPI: { ...action.payload },
       };
     })
     /*.addCase(userLogout, () => {
