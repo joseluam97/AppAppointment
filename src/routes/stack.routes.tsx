@@ -3,8 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 const { Screen, Navigator } = createStackNavigator()
 
 import HomeScreen from '../screens/HomeScreen'
-import GalleryScreen from '../screens/GalleryScreen'
-import AppointmentScreen from '../screens/dates/dates'
+import AppointmentScreen from '../screens/appointment/addAppointmentScreen'
+import ListAppointmentScreen from '../screens/listAppointmentScreen'
 
 export function StackRoutes() {
   return (
@@ -19,13 +19,12 @@ export function StackRoutes() {
       />
 
       <Screen
-        name='gallery'
-        component={GalleryScreen}
-      />
-
-      <Screen
         name='appointment'
         component={AppointmentScreen}
+      />
+      <Screen
+        name='listAppointment'
+        component={ListAppointmentScreen}
       />
     </Navigator>
   )

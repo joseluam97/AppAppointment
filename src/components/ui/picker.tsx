@@ -10,6 +10,7 @@ interface MyPickerProps<T> {
   options: T[];
   getValue: (option: T) => string;
   getLabel: (option: T) => string;
+  editable?: boolean; // Nueva propiedad
 }
 
 const MyPicker = <T extends unknown>({
@@ -20,15 +21,17 @@ const MyPicker = <T extends unknown>({
   options,
   getValue,
   getLabel,
+  editable = true, // Valor por defecto es true (editable)
 }: MyPickerProps<T>) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <Picker
         selectedValue={selectedValue}
-        onValueChange={onValueChange}
-        style={styles.picker}
+        onValueChange={editable ? onValueChange : () => {}}
+        style={[styles.picker, !editable && styles.disabledPicker]}
         mode={mode}
+        enabled={editable} // Habilita o deshabilita el Picker
       >
         <Picker.Item label="" value="" />
         {options?.map((option, index) => (
@@ -59,6 +62,9 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: '#fff',
     borderRadius: 5,
+  },
+  disabledPicker: {
+    backgroundColor: '#e0e0e0', // Cambiar color de fondo para deshabilitado
   },
 });
 

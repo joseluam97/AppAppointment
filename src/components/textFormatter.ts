@@ -53,3 +53,14 @@ export function DurationFormatter(dateISOString: string = '') {
 
   return DateTimeFormatter(dateISOString);
 }
+
+export function TimeFormatter(timeISOString: string = '') {
+  if (!timeISOString) {
+    return null;
+  }
+
+  const time = DateTime.fromISO(timeISOString);
+
+  // Formatea la hora en formato HH:mm
+  return time.toFormat('HH:mm');
+}

@@ -1,4 +1,4 @@
-import { AppointmentDataType, TypeAppointmentDataType, BreedDataType, TimeAvailableForAppointment } from "../../screens/dates/types";
+import { AppointmentDataType, TypeAppointmentDataType, BreedDataType, TimeAvailableForAppointment } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import {
   getAllApointmentAPIAction,
@@ -6,7 +6,8 @@ import {
   getAllBreedAPIAction,
   getTypesApointmentByBreedAPIAction,
   getTimeAvailableAppointmentAPIAction,
-  postAppointmentAPIAction
+  postAppointmentAPIAction,
+  getApointmentsWithFiltersAPIAction
 } from "./actions";
 
 type InitialStateType = {
@@ -29,6 +30,13 @@ const initialState: InitialStateType = {
 
 export default createReducer(initialState, (builder) => {
   builder
+  .addCase(getApointmentsWithFiltersAPIAction.fulfilled, (state, action) => {
+    return {
+      ...state,
+      loggedin: true,
+      listAppointmentAPI: { ...action.payload },
+    };
+  })
     .addCase(getAllApointmentAPIAction.fulfilled, (state, action) => {
       return {
         ...state,

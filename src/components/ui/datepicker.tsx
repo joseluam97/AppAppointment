@@ -9,12 +9,21 @@ interface DatePickerProps {
   name: string;
   rules?: Record<string, any>;
   defaultValue?: Date;
-  onChange?: (date: Date) => void; // Nueva propiedad onChange
-  value?: Date; // Nueva propiedad value
+  onChange?: (date: Date) => void;
+  value?: Date;
+  mode?: "date" | "time"; // Nueva propiedad mode para el modo del DatePicker
 }
 
 export default function DatePicker(props: DatePickerProps): JSX.Element {
-  const { name, rules, defaultValue, onChange, value, ...restOfProps } = props;
+  const {
+    name,
+    rules,
+    defaultValue,
+    onChange,
+    value,
+    mode = "date", // Valor por defecto para el modo del DatePicker
+    ...restOfProps
+  } = props;
 
   const {
     field,
@@ -23,28 +32,29 @@ export default function DatePicker(props: DatePickerProps): JSX.Element {
 
   const hasError: boolean = Boolean(error);
 
-  const currentColorScheme: "dark" | "light" | undefined = useColorScheme() ?? undefined;
-  
+  const currentColorScheme: "dark" | "light" | undefined =
+    useColorScheme() ?? undefined;
+
   return (
     <DateTimePicker
       {...restOfProps}
       themeVariant={currentColorScheme}
       is24Hour={true}
       locale="mn"
-      mode="date"
+      mode={mode} // Usar el modo proporcionado por las props
       minimumDate={new Date()}
       labelStyle={stylePicker.label}
       floatOnFocus={true}
       floatingPlaceholder={false}
       containerStyle={[stylePicker.container]}
-      fieldStyle={[stylePicker.picker]} 
+      fieldStyle={[stylePicker.picker]}
       enableErrors={hasError}
       validationMessagePosition={TextField.validationMessagePositions.TOP}
       validationMessage={hasError ? error?.message : undefined}
       onChange={(date: Date) => {
         field.onChange(date?.toISOString() ?? null);
         if (onChange) {
-          onChange(date); // Llama a la función onChange si está definida
+          onChange(date);
         }
       }}
       value={value ?? (field.value ? new Date(field.value) : undefined)}
@@ -68,6 +78,6 @@ const stylePicker = StyleSheet.create({
     height: 50,
     backgroundColor: "#fff",
     borderRadius: 5,
-    paddingLeft: 15
+    paddingLeft: 15,
   },
 });

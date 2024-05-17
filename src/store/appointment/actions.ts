@@ -1,9 +1,9 @@
-import { POST_APPOINTMENT, GET_ALL_APPOINTMENT, GET_ALL_TYPES_APPOINTMENT, GET_ALL_BREED, GET_TYPES_APPOINTMENT_BY_BREED, GET_TIME_AVAILABLE_APPOINTMENT } from "./types";
+import { GET_APPOINTMENT_WITH_FILTERS, POST_APPOINTMENT, GET_ALL_APPOINTMENT, GET_ALL_TYPES_APPOINTMENT, GET_ALL_BREED, GET_TYPES_APPOINTMENT_BY_BREED, GET_TIME_AVAILABLE_APPOINTMENT } from "./types";
 
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppointmentDataType } from "../../screens/dates/types";
+import { AppointmentDataType } from "../../screens/types";
 
 const urlBreed = "http://192.168.1.142:3100/breed";
 const urlAppointment = "http://192.168.1.142:3100/appointment";
@@ -12,6 +12,21 @@ const urlTypeAppointment = "http://192.168.1.142:3100/typeAppointment";
 export const initialStateAPIAction = createAction("initialState/set");
 
 //APOINTMENT
+export const getApointmentsWithFiltersAPIAction = createAsyncThunk(GET_APPOINTMENT_WITH_FILTERS, async (date_selected: any) => {
+  try {
+    // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
+      const urlTimeAvailableAppointment = `${urlAppointment}/filters/`;
+    const response = await axios.post(urlTimeAvailableAppointment, {date_appointment: date_selected});
+
+    // Devuelve los datos del usuario si la solicitud es exitosa
+    return response.data;
+  } catch (error) {
+    // Maneja cualquier error que ocurra durante la solicitud
+    console.error("Error during login:", error);
+    throw error;
+  }
+});
+
 export const getAllApointmentAPIAction = createAsyncThunk(GET_ALL_APPOINTMENT, async () => {
   try {
     // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor

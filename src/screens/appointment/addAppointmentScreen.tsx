@@ -5,7 +5,7 @@ import { Icons, RHFTextField, RHFPicker } from "../../components";
 
 import React from "react";
 import { StyleSheet } from "react-native";
-import { AppointmentDataType, BreedDataType, TimeAvailableForAppointment, TypeAppointmentDataType } from "./types";
+import { AppointmentDataType, BreedDataType, TimeAvailableForAppointment, TypeAppointmentDataType } from "../types";
 import globalStyles from "../../constants/globalStyles";
 //import {userLogin} from '@app/redux/actions';
 import { PickerModes, PickerValue, TextField, DateTimePicker } from "react-native-ui-lib";
@@ -15,6 +15,7 @@ import { PickerItemType } from "../../components/ui/types";
 import { StoreRootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useIsFocused } from '@react-navigation/native';
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
   getAllApointmentAPIAction,
@@ -27,8 +28,9 @@ import {
 import MyPicker from "../../components/ui/picker";
 import DatePicker from "../../components/ui/datepicker";
 
-export default function Dates(): JSX.Element {
+export default function Dates({ navigation }: any): JSX.Element {
   const dispatch = useDispatch<any>();
+  const isFocused = useIsFocused();
 
   const [valorCadena, setValorCadena] = useState<any>("ferfe");
   const form = useForm<AppointmentDataType>();
@@ -69,14 +71,19 @@ export default function Dates(): JSX.Element {
         }
       }
 
+      // Create new appointment
       dispatch(
         postAppointmentAPIAction({
           user: "66321510acbe27394c1d7d61",
-          type: typeServiceSelected?._id,
+          type: typeServiceSelected,
           date_appointment: date_appointment,
           description: "Creada desde APP",
         })
       );
+
+      // Redit to list appointment
+      navigation.navigate('listAppointment')
+      
     }
 
     console.log("FROM SENT - END");
@@ -85,6 +92,19 @@ export default function Dates(): JSX.Element {
   useEffect(() => {
     dispatch(getAllBreedAPIAction());
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      // Clear form
+      setBreedSelected(undefined);
+      seTypeServiceSelected(undefined);
+      setDateAppointmentSelected(new Date());
+      setTimeAppointmentSelected(undefined);
+
+      // Get all Breed
+      dispatch(getAllBreedAPIAction());
+    }
+  }, [isFocused]);
 
   // Set services in combo box
   useEffect(() => {
@@ -215,6 +235,7 @@ export default function Dates(): JSX.Element {
           rules={{ required: "Enter date please!" }}
           value={dateAppointmentSelected}
           onChange={changeDateAppointment}
+          mode="date"
         />
 
         {seeTime == true ? (
@@ -228,29 +249,6 @@ export default function Dates(): JSX.Element {
           />
         ) : null}
 
-        {/*<RHFPicker
-            name="selectDateAppointment"
-            placeholder="Select the date of the appointment"
-            rules={{ required: "This field is required" }}
-            optionList={listDayAvailable}
-            value={dateAppointmentSelected ? dateAppointmentSelected.id : undefined} // Utilizar el valor seleccionado como el valor del campo
-            onChange={(e: PickerItemType) => {
-              changeDateAppointment(e); // Actualizar el estado con el elemento seleccionado
-            }}
-            leadingAccessory={dateIcon}
-          />
-
-          <RHFPicker
-            name="selectTimeAppointment"
-            placeholder="Select appointment time"
-            rules={{ required: "This field is required" }}
-            optionList={listTimesAvailable}
-            value={timeAppointmentSelected ? timeAppointmentSelected.id : undefined} // Utilizar el valor seleccionado como el valor del campo
-            onChange={(e: PickerItemType) => {
-              changeTimeAppointment(e); // Actualizar el estado con el elemento seleccionado
-            }}
-            leadingAccessory={hourIcon}
-          />*/}
       </FormProvider>
 
       <Button title="SAVE" onPress={() => form?.handleSubmit(onLoginPress)()} />
