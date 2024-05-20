@@ -56,6 +56,7 @@ export default function Dates({ navigation }: any): JSX.Element {
   const listBreedAPI = useSelector((state: StoreRootState) => state?.appointment?.listBreedAPI ?? []);
   const listTypeAppointmentAPI = useSelector((state: StoreRootState) => state?.appointment?.listTypeAppointmentAPI ?? []);
   const listTimeAppointmentAvailable = useSelector((state: StoreRootState) => state?.appointment?.listTimeAppointmentAvailable ?? []);
+  const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
 
   const onLoginPress = (formData: AppointmentDataType) => {
     console.log("FROM SENT - INI");
@@ -74,6 +75,7 @@ export default function Dates({ navigation }: any): JSX.Element {
       // Create new appointment
       dispatch(
         postAppointmentAPIAction({
+          business: userData?.my_business,
           user: "66321510acbe27394c1d7d61",
           type: typeServiceSelected,
           date_appointment: date_appointment,

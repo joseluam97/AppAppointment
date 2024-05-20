@@ -35,6 +35,14 @@ const AppointmentItem = ({ appointment, type, user, listBreed, valueOpenAll }) =
     return date_appointment + " (" + appointment?.type?.title + ")";
   }
 
+  const format_time_appointment = (appointment: AppointmentDataType) =>{
+    let date_appointment: string = "";
+    if(appointment?.date_appointment != undefined){
+      date_appointment = TimeFormatter(appointment.date_appointment).toString() + " - " + getTimeFinishAppointment(appointment.date_appointment, type?.time).toString();
+    }
+    return date_appointment + " (" + type?.time + " minutes)";
+  }
+
   useEffect(() => {
     if(valueOpenAll == true){
       setShowDetails(true);
@@ -61,7 +69,7 @@ const AppointmentItem = ({ appointment, type, user, listBreed, valueOpenAll }) =
               <MaterialIcons name="schedule" size={20} color="#888" />
               <Text style={styles.text}>
                 {" "}
-                {TimeFormatter} - {getTimeFinishAppointment(appointment?.date_appointment, type?.time)} ({type?.time} minutes)
+                {format_time_appointment(appointment)}
               </Text>
             </View>
             <View style={styles.row}>

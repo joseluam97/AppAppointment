@@ -7,6 +7,7 @@ const CustomDrawerContent = (props) => {
 
   return (
     <DrawerContentScrollView {...props}>
+
       <DrawerItem
         label="Home"
         onPress={() => props.navigation.navigate('home')}
@@ -21,6 +22,10 @@ const CustomDrawerContent = (props) => {
           <DrawerItem
             label="Categories"
             onPress={() => props.navigation.navigate('categories')}
+          />
+          <DrawerItem
+            label="My clients"
+            onPress={() => props.navigation.navigate('myClients')}
           />
           <DrawerItem
             label="My Business"

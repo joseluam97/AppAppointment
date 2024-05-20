@@ -15,6 +15,7 @@ import CustomDrawerContent from "./children.routes";
 import Categories from "../screens/appointment/categoriesScreeen";
 import MyBusiness from "../screens/business/myBusiness";
 import MyProfile from "../screens/user/myProfile";
+import MyClients from "../screens/business/myClients";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,6 +23,7 @@ export function DrawerRoutes() {
   const loggedin = useSelector((state: StoreRootState) => state?.user?.loggedin ?? undefined);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
 
+  const [rootFalse, setRootFalse] = React.useState<boolean>(false);
   const [exitsLogin, setExitsLogin] = React.useState<boolean>(false);
   const [exitsBussines, setExitsBussines] = React.useState<boolean>(false);
 
@@ -57,6 +59,12 @@ export function DrawerRoutes() {
 
   return (
     <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      
+      <Drawer.Screen 
+        name="appointment" 
+        component={AddApointmentScreen} 
+      />
+          
       {exitsLogin ? (
         <>
           <Drawer.Screen 
@@ -72,6 +80,11 @@ export function DrawerRoutes() {
           <Drawer.Screen 
             name="categories"
             component={Categories}
+          />
+          
+          <Drawer.Screen 
+            name="myClients"
+            component={MyClients}
           />
 
           <Drawer.Screen 
