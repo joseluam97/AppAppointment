@@ -1,4 +1,4 @@
-import { AppointmentDataType, TypeAppointmentDataType, BreedDataType, TimeAvailableForAppointment, UserDataType } from "../../screens/types";
+import { AppointmentDataType, SubCategoryDataType, CategoryDataType, TimeAvailableForAppointment, UserDataType } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import {
   loginUserAPIAction,

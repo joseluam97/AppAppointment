@@ -8,7 +8,7 @@ import AppointmentItem from "../../components/ui/appointment_item";
 import DatePicker from "../../components/ui/datepicker";
 import { StoreRootState } from "../../store/store";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { AppointmentDataType, BreedDataType, BusinessDataType, UserDataType } from "../types";
+import { AppointmentDataType, CategoryDataType, BusinessDataType, UserDataType } from "../types";
 import { Icons } from "../../components";
 import { getAllBusinessAPIAction } from "../../store/business/actions";
 import BusinessItem from "../../components/ui/business_item";
@@ -44,8 +44,8 @@ const ListBusiness = () => {
   useEffect(() => {
     console.log("list_bussinesAPI INI")
     if (list_bussinesAPI != undefined && list_bussinesAPI.length != 0) {
-      const breedArray: BusinessDataType[] = Object.values(list_bussinesAPI);
-      setListBusiness(breedArray);
+      const categoryArray: BusinessDataType[] = Object.values(list_bussinesAPI);
+      setListBusiness(categoryArray);
     }
     console.log("list_bussinesAPI - END")
   }, [list_bussinesAPI]);

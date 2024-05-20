@@ -5,7 +5,7 @@ import { Icons, RHFTextField, RHFPicker } from "../../components";
 
 import React from "react";
 import { StyleSheet } from "react-native";
-import { AppointmentDataType, BreedDataType, TimeAvailableForAppointment, TypeAppointmentDataType } from "../types";
+import { AppointmentDataType, CategoryDataType, TimeAvailableForAppointment, SubCategoryDataType } from "../types";
 import globalStyles from "../../constants/globalStyles";
 //import {userLogin} from '@app/redux/actions';
 import { PickerModes, PickerValue, TextField, DateTimePicker } from "react-native-ui-lib";
@@ -20,8 +20,8 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import {
   getAllApointmentAPIAction,
   getAllTypesApointmentAPIAction,
-  getAllBreedAPIAction,
-  getTypesApointmentByBreedAPIAction,
+  getAllCategoryAPIAction,
+  getTypesApointmentByCategoryAPIAction,
   getTimeAvailableAppointmentAPIAction,
   postAppointmentAPIAction
 } from "../../store/appointment/actions";
@@ -36,13 +36,13 @@ export default function Dates({ navigation }: any): JSX.Element {
   const form = useForm<AppointmentDataType>();
   const { register, setValue, getValues } = useForm();
 
-  // Breed
-  const [breedSelected, setBreedSelected] = useState<BreedDataType>();
-  const [listBreed, setListBreed] = useState<BreedDataType[]>();
+  // Category
+  const [categorySelected, setCategorySelected] = useState<CategoryDataType>();
+  const [listCategory, setListCategory] = useState<CategoryDataType[]>();
 
   // Type
-  const [typeServiceSelected, seTypeServiceSelected] = useState<TypeAppointmentDataType>();
-  const [listTypeAppointment, setListTypeAppointment] = useState<TypeAppointmentDataType[]>();
+  const [typeServiceSelected, seTypeServiceSelected] = useState<SubCategoryDataType>();
+  const [listSubCategory, setListSubCategory] = useState<SubCategoryDataType[]>();
 
   // Date
   const [dateAppointmentSelected, setDateAppointmentSelected] = useState<Date | undefined>(new Date());
@@ -53,8 +53,8 @@ export default function Dates({ navigation }: any): JSX.Element {
   const [listTimesAvailable, setListTimesAvailable] = useState<TimeAvailableForAppointment[]>([]);
 
   // Selector
-  const listBreedAPI = useSelector((state: StoreRootState) => state?.appointment?.listBreedAPI ?? []);
-  const listTypeAppointmentAPI = useSelector((state: StoreRootState) => state?.appointment?.listTypeAppointmentAPI ?? []);
+  const listCategoryAPI = useSelector((state: StoreRootState) => state?.appointment?.listCategoryAPI ?? []);
+  const listSubCategoryAPI = useSelector((state: StoreRootState) => state?.appointment?.listSubCategoryAPI ?? []);
   const listTimeAppointmentAvailable = useSelector((state: StoreRootState) => state?.appointment?.listTimeAppointmentAvailable ?? []);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
 
@@ -92,37 +92,37 @@ export default function Dates({ navigation }: any): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(getAllBreedAPIAction());
+    dispatch(getAllCategoryAPIAction());
   }, []);
 
   useEffect(() => {
     if (isFocused) {
       // Clear form
-      setBreedSelected(undefined);
+      setCategorySelected(undefined);
       seTypeServiceSelected(undefined);
       setDateAppointmentSelected(new Date());
       setTimeAppointmentSelected(undefined);
 
-      // Get all Breed
-      dispatch(getAllBreedAPIAction());
+      // Get all Category
+      dispatch(getAllCategoryAPIAction());
     }
   }, [isFocused]);
 
   // Set services in combo box
   useEffect(() => {
-    if (listTypeAppointmentAPI != undefined && listTypeAppointmentAPI.length != 0) {
-      const appointmentTypeArray: TypeAppointmentDataType[] = Object.values(listTypeAppointmentAPI);
-      setListTypeAppointment(appointmentTypeArray);
+    if (listSubCategoryAPI != undefined && listSubCategoryAPI.length != 0) {
+      const appointmentTypeArray: SubCategoryDataType[] = Object.values(listSubCategoryAPI);
+      setListSubCategory(appointmentTypeArray);
     }
-  }, [listTypeAppointmentAPI]);
+  }, [listSubCategoryAPI]);
 
   // Set services in combo box
   useEffect(() => {
-    if (listBreedAPI != undefined && listBreedAPI.length != 0) {
-      const breedArray: BreedDataType[] = Object.values(listBreedAPI);
-      setListBreed(breedArray);
+    if (listCategoryAPI != undefined && listCategoryAPI.length != 0) {
+      const categoryArray: CategoryDataType[] = Object.values(listCategoryAPI);
+      setListCategory(categoryArray);
     }
-  }, [listBreedAPI]);
+  }, [listCategoryAPI]);
 
   // Set times in combo box
   useEffect(() => {
@@ -140,7 +140,7 @@ export default function Dates({ navigation }: any): JSX.Element {
   }, [listTimeAppointmentAvailable]);
 
   useEffect(() => {
-    if (breedSelected != undefined && typeServiceSelected != undefined && dateAppointmentSelected != undefined) {
+    if (categorySelected != undefined && typeServiceSelected != undefined && dateAppointmentSelected != undefined) {
       setSeeTime(true);
       dispatch(
         getTimeAvailableAppointmentAPIAction({
@@ -151,31 +151,31 @@ export default function Dates({ navigation }: any): JSX.Element {
     } else {
       setSeeTime(false);
     }
-  }, [breedSelected, typeServiceSelected, dateAppointmentSelected]);
+  }, [categorySelected, typeServiceSelected, dateAppointmentSelected]);
 
   const typeIcon = <Icons iconSet="Feather" name="list" color="#000000" size={16} style={styles.inputLeftIcon} />;
   const dateIcon = <Icons iconSet="AntDesign" name="calendar" color="#000000" size={16} style={styles.inputLeftIcon} />;
   const hourIcon = <Icons iconSet="Ionicons" name="time-outline" color="#000000" size={16} style={styles.inputLeftIcon} />;
   const dollarIcon = <Icons iconSet="MaterialIcons" name="attach-money" color="#000000" size={16} style={styles.inputLeftIcon} />;
 
-  const changeBreed = (idSelected: any | undefined) => {
-    console.log("changeBreed - INI");
+  const changeCategory = (idSelected: any | undefined) => {
+    console.log("changeCategory - INI");
     console.log(idSelected);
-    if (listBreed != undefined) {
-      let elementoSelected: BreedDataType = listBreed?.filter((elemento) => elemento._id == idSelected)[0];
+    if (listCategory != undefined) {
+      let elementoSelected: CategoryDataType = listCategory?.filter((elemento) => elemento._id == idSelected)[0];
       if (elementoSelected != undefined) {
-        setBreedSelected(idSelected);
-        dispatch(getTypesApointmentByBreedAPIAction(idSelected));
+        setCategorySelected(idSelected);
+        dispatch(getTypesApointmentByCategoryAPIAction(idSelected));
       }
     }
-    console.log("changeBreed - END");
+    console.log("changeCategory - END");
   };
 
   const changeTypeDog = (idSelected: any | undefined) => {
     console.log("changeTypeDog - INI");
     console.log(idSelected);
-    if (listTypeAppointment != undefined) {
-      let elementoSelected: TypeAppointmentDataType = listTypeAppointment?.filter((elemento) => elemento._id == idSelected)[0];
+    if (listSubCategory != undefined) {
+      let elementoSelected: SubCategoryDataType = listSubCategory?.filter((elemento) => elemento._id == idSelected)[0];
       if (elementoSelected != undefined) {
         seTypeServiceSelected(idSelected);
       }
@@ -211,20 +211,20 @@ export default function Dates({ navigation }: any): JSX.Element {
     <View style={styles?.containerBase}>
       <FormProvider {...form}>
         <MyPicker
-          label="Select your dog's breed:"
-          selectedValue={breedSelected}
-          onValueChange={(value) => changeBreed(value)}
-          options={listBreed != undefined ? listBreed : []}
+          label="Select your dog's category:"
+          selectedValue={categorySelected}
+          onValueChange={(value) => changeCategory(value)}
+          options={listCategory != undefined ? listCategory : []}
           getValue={(option) => option?._id?.toString()}
           getLabel={(option) => option?.name}
         />
 
-        {breedSelected != undefined ? (
+        {categorySelected != undefined ? (
           <MyPicker
             label="Select your type of appointment:"
             selectedValue={typeServiceSelected}
             onValueChange={(value) => changeTypeDog(value)}
-            options={listTypeAppointment != undefined ? listTypeAppointment : []}
+            options={listSubCategory != undefined ? listSubCategory : []}
             getValue={(option) => option?._id?.toString()}
             getLabel={(option) => option?.title + " - " + option?.price + " €"}
           />

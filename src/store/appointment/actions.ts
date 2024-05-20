@@ -5,9 +5,9 @@ import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppointmentDataType, BusinessDataType } from "../../screens/types";
 
-const urlBreed = "http://192.168.1.142:3100/breed";
+const urlCategory = "http://192.168.1.142:3100/category";
 const urlAppointment = "http://192.168.1.142:3100/appointment";
-const urlTypeAppointment = "http://192.168.1.142:3100/typeAppointment";
+const urlSubCategory = "http://192.168.1.142:3100/subCategory";
 
 export const initialStateAPIAction = createAction("initialState/set");
 
@@ -91,7 +91,7 @@ export const postAppointmentAPIAction = createAsyncThunk(
 export const getAllTypesApointmentAPIAction = createAsyncThunk(GET_ALL_TYPES_APPOINTMENT, async () => {
   try {
     // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
-    const response = await axios.get(urlTypeAppointment);
+    const response = await axios.get(urlSubCategory);
 
     // Devuelve los datos del usuario si la solicitud es exitosa
     return response.data;
@@ -102,11 +102,11 @@ export const getAllTypesApointmentAPIAction = createAsyncThunk(GET_ALL_TYPES_APP
   }
 });
 
-export const getTypesApointmentByBreedAPIAction = createAsyncThunk(GET_TYPES_APPOINTMENT_BY_BREED, async (idBreed: any) => {
+export const getTypesApointmentByCategoryAPIAction = createAsyncThunk(GET_TYPES_APPOINTMENT_BY_BREED, async (idCategory: any) => {
   try {
     // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
-    const urlTypesAppointmentByBreed = `${urlTypeAppointment}/byBreed/${idBreed}`;
-    const response = await axios.get(urlTypesAppointmentByBreed);
+    const urlTypesAppointmentByCategory = `${urlSubCategory}/byCategory/${idCategory}`;
+    const response = await axios.get(urlTypesAppointmentByCategory);
 
     // Devuelve los datos del usuario si la solicitud es exitosa
     return response.data;
@@ -118,10 +118,10 @@ export const getTypesApointmentByBreedAPIAction = createAsyncThunk(GET_TYPES_APP
 });
 
 // BREED
-export const getAllBreedAPIAction = createAsyncThunk(GET_ALL_BREED, async () => {
+export const getAllCategoryAPIAction = createAsyncThunk(GET_ALL_BREED, async () => {
   try {
     // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
-    const response = await axios.get(urlBreed);
+    const response = await axios.get(urlCategory);
 
     // Devuelve los datos del usuario si la solicitud es exitosa
     return response.data;

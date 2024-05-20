@@ -1,10 +1,10 @@
-import { AppointmentDataType, TypeAppointmentDataType, BreedDataType, TimeAvailableForAppointment } from "../../screens/types";
+import { AppointmentDataType, SubCategoryDataType, CategoryDataType, TimeAvailableForAppointment } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import {
   getAllApointmentAPIAction,
   getAllTypesApointmentAPIAction,
-  getAllBreedAPIAction,
-  getTypesApointmentByBreedAPIAction,
+  getAllCategoryAPIAction,
+  getTypesApointmentByCategoryAPIAction,
   getTimeAvailableAppointmentAPIAction,
   postAppointmentAPIAction,
   getApointmentsWithFiltersAPIAction
@@ -14,8 +14,8 @@ type InitialStateType = {
   resultPost: boolean;
   loggedin: boolean;
   listAppointmentAPI: AppointmentDataType[] | undefined;
-  listTypeAppointmentAPI: TypeAppointmentDataType[] | undefined;
-  listBreedAPI: BreedDataType[] | undefined;
+  listSubCategoryAPI: SubCategoryDataType[] | undefined;
+  listCategoryAPI: CategoryDataType[] | undefined;
   listTimeAppointmentAvailable: TimeAvailableForAppointment[] | undefined;
 };
 
@@ -23,8 +23,8 @@ const initialState: InitialStateType = {
   resultPost: false,
   loggedin: false,
   listAppointmentAPI: [],
-  listTypeAppointmentAPI: [],
-  listBreedAPI: [],
+  listSubCategoryAPI: [],
+  listCategoryAPI: [],
   listTimeAppointmentAvailable: []
 };
 
@@ -61,21 +61,21 @@ export default createReducer(initialState, (builder) => {
       return {
         ...state,
         loggedin: true,
-        listTypeAppointmentAPI: { ...action.payload },
+        listSubCategoryAPI: { ...action.payload },
       };
     })
-    .addCase(getTypesApointmentByBreedAPIAction.fulfilled, (state, action) => {
+    .addCase(getTypesApointmentByCategoryAPIAction.fulfilled, (state, action) => {
       return {
         ...state,
         loggedin: true,
-        listTypeAppointmentAPI: { ...action.payload },
+        listSubCategoryAPI: { ...action.payload },
       };
     })
-    .addCase(getAllBreedAPIAction.fulfilled, (state, action) => {
+    .addCase(getAllCategoryAPIAction.fulfilled, (state, action) => {
       return {
         ...state,
         loggedin: true,
-        listBreedAPI: { ...action.payload },
+        listCategoryAPI: { ...action.payload },
       };
     })
     /*.addCase(userLogout, () => {

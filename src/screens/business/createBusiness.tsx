@@ -5,7 +5,7 @@ import { Icons, RHFTextField, RHFPicker } from "../../components";
 
 import React from "react";
 import { StyleSheet } from "react-native";
-import { AppointmentDataType, BreedDataType, TimeAvailableForAppointment, BusinessDataType, ScheduleDataType, PlacesZippopotamDataType, ZippopotamDataType } from "../types";
+import { AppointmentDataType, CategoryDataType, TimeAvailableForAppointment, BusinessDataType, ScheduleDataType, PlacesZippopotamDataType, ZippopotamDataType } from "../types";
 import globalStyles from "../../constants/globalStyles";
 //import {userLogin} from '@app/redux/actions';
 import { PickerModes, PickerValue, TextField, DateTimePicker } from "react-native-ui-lib";

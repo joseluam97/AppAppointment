@@ -1,4 +1,4 @@
-import { AppointmentDataType, TypeAppointmentDataType, BreedDataType, TimeAvailableForAppointment, UserDataType, ZippopotamDataType } from "../../screens/types";
+import { AppointmentDataType, SubCategoryDataType, CategoryDataType, TimeAvailableForAppointment, UserDataType, ZippopotamDataType } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import {
   getInfoByZipCodeAPIAction,

@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { DurationFormatter, TimeFormatter } from "../textFormatter";
 import { MaterialIcons } from "@expo/vector-icons";
-import { BusinessDataType, BreedDataType, ScheduleDataType } from "../../screens/types";
+import { BusinessDataType, CategoryDataType, ScheduleDataType } from "../../screens/types";
 import { getNameDay } from "../utils";
 
 const BusinessItem = ({ business }) => {

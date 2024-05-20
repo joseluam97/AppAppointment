@@ -3,20 +3,20 @@ import { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { DurationFormatter, TimeFormatter } from "../textFormatter";
 import { MaterialIcons } from "@expo/vector-icons";
-import { AppointmentDataType, BreedDataType } from "../../screens/types";
+import { AppointmentDataType, CategoryDataType } from "../../screens/types";
 
-const AppointmentItem = ({ appointment, type, user, listBreed, valueOpenAll }) => {
+const AppointmentItem = ({ appointment, type, user, listCategory, valueOpenAll }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
 
-  const formatIdBreedToObject = (idBreed: string) => {
-    if (listBreed != undefined) {
-      let listBreedAPI: BreedDataType[] = listBreed;
-      let breedSelected: BreedDataType = listBreedAPI.filter((elemento) => elemento._id == idBreed)[0];
-      return breedSelected;
+  const formatIdCategoryToObject = (idCategory: string) => {
+    if (listCategory != undefined) {
+      let listCategoryAPI: CategoryDataType[] = listCategory;
+      let categorySelected: CategoryDataType = listCategoryAPI.filter((elemento) => elemento._id == idCategory)[0];
+      return categorySelected;
     }
   };
 
@@ -63,7 +63,7 @@ const AppointmentItem = ({ appointment, type, user, listBreed, valueOpenAll }) =
           <View style={styles.details}>
             <View style={styles.row}>
               <MaterialIcons name="pets" size={20} color="#888" />
-              <Text style={styles.text}> {formatIdBreedToObject(type?.breed)?.name} ({formatIdBreedToObject(type?.breed)?.weight} Kg)</Text>
+              <Text style={styles.text}> {formatIdCategoryToObject(type?.category)?.name} ({formatIdCategoryToObject(type?.category)?.weight} Kg)</Text>
             </View>
             <View style={styles.row}>
               <MaterialIcons name="schedule" size={20} color="#888" />

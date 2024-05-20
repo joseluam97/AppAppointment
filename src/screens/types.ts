@@ -18,15 +18,15 @@ export type AppointmentDataType = {
   description: string;
 };
 
-export type TypeAppointmentDataType = {
+export type SubCategoryDataType = {
   _id: string;
   title: string;
   price: number;
   time: number;
-  breed: Object;
+  category: Object;
 }
 
-export type BreedDataType = {
+export type CategoryDataType = {
   _id: string;
   name: string;
   weight: number;

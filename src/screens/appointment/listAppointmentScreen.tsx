@@ -7,7 +7,7 @@ import { getAllApointmentAPIAction, getApointmentsWithFiltersAPIAction } from ".
 import AppointmentItem from "../../components/ui/appointment_item";
 import DatePicker from "../../components/ui/datepicker";
 import { StoreRootState } from "../../store/store";
-import { AppointmentDataType, BreedDataType } from "../types";
+import { AppointmentDataType, CategoryDataType } from "../types";
 import { Icons } from "../../components";
 
 const Dates = () => {
@@ -19,11 +19,11 @@ const Dates = () => {
 
   const [appointmentSelected, setAppointmentSelected] = useState<AppointmentDataType>();
   const [listAppointment, setListAppointment] = useState<AppointmentDataType[]>();
-  const [listBreed, setListBreed] = useState<BreedDataType[]>();
+  const [listCategory, setListCategory] = useState<CategoryDataType[]>();
   const [openAll, setOpenAll] = useState<boolean | undefined>(undefined);
   const [dateAppointmentSelected, setDateAppointmentSelected] = useState<Date | undefined>(new Date());
 
-  const listBreedAPI = useSelector((state: StoreRootState) => state?.appointment?.listBreedAPI ?? []);
+  const listCategoryAPI = useSelector((state: StoreRootState) => state?.appointment?.listCategoryAPI ?? []);
   const listAppointmentAPI = useSelector((state: StoreRootState) => state?.appointment?.listAppointmentAPI ?? []);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
 
@@ -49,11 +49,11 @@ const Dates = () => {
   }, [listAppointmentAPI]);
 
   useEffect(() => {
-    if (listBreedAPI != undefined && listBreedAPI.length != 0) {
-      const breedArray: BreedDataType[] = Object.values(listBreedAPI);
-      setListBreed(breedArray);
+    if (listCategoryAPI != undefined && listCategoryAPI.length != 0) {
+      const categoryArray: CategoryDataType[] = Object.values(listCategoryAPI);
+      setListCategory(categoryArray);
     }
-  }, [listBreedAPI]);
+  }, [listCategoryAPI]);
 
   const createNewAppointment = () => {
     navigation.navigate("appointment");
@@ -127,7 +127,7 @@ const Dates = () => {
           data={listAppointment}
           renderItem={({ item }) => (
             <View style={styles.appointmentItemContainer}>
-              <AppointmentItem appointment={item} type={item.type} user={item.user} listBreed={listBreed} valueOpenAll={openAll} />
+              <AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={openAll} />
             </View>
           )}
           keyExtractor={(item) => item._id}
