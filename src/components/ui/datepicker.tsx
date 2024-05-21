@@ -66,7 +66,7 @@ const stylePicker = StyleSheet.create({
   container: {
     marginVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#fff",
     borderRadius: 10,
   },
   label: {
@@ -79,5 +79,14 @@ const stylePicker = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
     paddingLeft: 15,
+    
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

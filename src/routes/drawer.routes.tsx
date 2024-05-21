@@ -23,7 +23,6 @@ export function DrawerRoutes() {
   const loggedin = useSelector((state: StoreRootState) => state?.user?.loggedin ?? undefined);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
 
-  const [rootFalse, setRootFalse] = React.useState<boolean>(false);
   const [exitsLogin, setExitsLogin] = React.useState<boolean>(false);
   const [exitsBussines, setExitsBussines] = React.useState<boolean>(false);
 
@@ -88,11 +87,6 @@ export function DrawerRoutes() {
           />
 
           <Drawer.Screen 
-            name="myBusiness"
-            component={MyBusiness}
-          />
-
-          <Drawer.Screen 
             name="myProfile" 
             component={MyProfile} 
           />
@@ -102,19 +96,17 @@ export function DrawerRoutes() {
             component={ListAppointmentScreen} 
           />
 
-          {!exitsBussines ? (
-            <Drawer.Screen 
-              name="createBusiness" 
-              component={CreateBusiness} 
-              options={{ title: "Add your business" }} 
-            />
-          ) : (
-            <Drawer.Screen 
-              name="createBusiness" 
-              component={CreateBusiness} 
-              options={{ title: "Modify your business" }}
-            />
-          )}
+          <Drawer.Screen 
+            name="createBusiness" 
+            component={CreateBusiness} 
+            options={{ title: "Add your business" }} 
+          />
+
+          <Drawer.Screen 
+            name="myBusiness" 
+            component={MyBusiness} 
+          />
+
           <Drawer.Screen 
             name="searchBusiness" 
             component={ListBusiness} 

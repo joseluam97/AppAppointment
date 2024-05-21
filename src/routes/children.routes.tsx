@@ -1,10 +1,48 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { useSelector } from 'react-redux';
+import { StoreRootState } from '../store/store';
 
 const CustomDrawerContent = (props) => {
-  const [showSettingsOptions, setShowSettingsOptions] = useState(false);
 
+  const loggedin = useSelector((state: StoreRootState) => state?.user?.loggedin ?? undefined);
+  const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
+
+  const [showSettingsOptions, setShowSettingsOptions] = useState(false);
+  const [exitsLogin, setExitsLogin] = React.useState<boolean>(false);
+  const [exitsBussines, setExitsBussines] = React.useState<boolean>(false);
+
+  const checkDataUser = () => {
+    if (userData != undefined) {
+      if (userData?.my_business == undefined) {
+        setExitsBussines(false);
+      } else {
+        setExitsBussines(true);
+      }
+    } else {
+      setExitsBussines(false);
+    }
+  };
+  
+  React.useEffect(() => {
+    if (loggedin != undefined) {
+      setExitsLogin(true);
+      checkDataUser();
+    } else {
+      setExitsLogin(false);
+    }
+  }, [loggedin]);
+
+  React.useEffect(() => {
+    if (loggedin != undefined) {
+      setExitsLogin(true);
+      checkDataUser();
+    } else {
+      setExitsLogin(false);
+    }
+  }, []);
+  
   return (
     <DrawerContentScrollView {...props}>
 
@@ -27,10 +65,18 @@ const CustomDrawerContent = (props) => {
             label="My clients"
             onPress={() => props.navigation.navigate('myClients')}
           />
-          <DrawerItem
+          
+          {!exitsBussines && (<DrawerItem
+            label="Add your business"
+            onPress={() => props.navigation.navigate('createBusiness')}
+          />
+          )}
+
+          {exitsBussines && (<DrawerItem
             label="My Business"
             onPress={() => props.navigation.navigate('myBusiness')}
           />
+          )}
         </View>
       )}
 

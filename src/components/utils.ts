@@ -74,3 +74,28 @@ export const transformZippopotamData = (data: any): ZippopotamDataType => {
   }
   
 };
+
+export const getTimeInHoursAndMinutes = (minutes: string): string => {
+  // Convertir la cadena a un número
+  const totalMinutes = parseInt(minutes, 10);
+
+  // Calcular las horas y los minutos restantes
+  const hours = Math.floor(totalMinutes / 60);
+  const remainingMinutes = totalMinutes % 60;
+
+  // Construir la cadena de resultado
+  let result = "";
+
+  if (hours > 0) {
+    result += `${hours} hora${hours > 1 ? 's' : ''}`;
+  }
+
+  if (remainingMinutes > 0) {
+    if (hours > 0) {
+      result += " y ";
+    }
+    result += `${remainingMinutes} minuto${remainingMinutes > 1 ? 's' : ''}`;
+  }
+
+  return result || "0 minutos";
+};

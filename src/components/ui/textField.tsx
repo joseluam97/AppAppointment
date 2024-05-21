@@ -18,6 +18,7 @@ export default (props: TextFieldProps): JSX.Element => {
     maxLength, // Nueva: Longitud máxima del campo de entrada
     value,
     onChangeText,
+    readOnly = false,
     ...restOfProps 
   } = props;
 
@@ -39,7 +40,7 @@ export default (props: TextFieldProps): JSX.Element => {
         label={props?.label ?? props?.placeholder}
         floatOnFocus={true}
         floatingPlaceholder={true}
-        style={[styleField.field]}
+        style={[styleField.field, readOnly && styleField.readOnlyField]}
         enableErrors={hasError}
         validationMessagePosition={TextField.validationMessagePositions.TOP}
         validationMessage={hasError ? error?.message : undefined}
@@ -52,6 +53,7 @@ export default (props: TextFieldProps): JSX.Element => {
         keyboardType={keyboardType} // Tipo de teclado para el campo de entrada
         mask={mask} // Máscara para el campo de entrada
         maxLength={maxLength}
+        editable={!readOnly}
       />
     </View>
   );
@@ -61,7 +63,7 @@ const styleField = StyleSheet.create({
   container: {
     marginVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#fff",
     borderRadius: 10,
   },
   label: {
@@ -74,5 +76,18 @@ const styleField = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
     paddingLeft: 15,
+    
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  readOnlyField: {
+    backgroundColor: "#f0f0f0", // Color de fondo para campos de solo lectura
+    color: "#000", // Color de texto para campos de solo lectura
   },
 });

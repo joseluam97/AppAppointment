@@ -12,6 +12,7 @@ export type BusinessDataType = {
 
 export type AppointmentDataType = {
   _id: string;
+  business: BusinessDataType;
   user: Object;
   type: Object;
   date_appointment: Date;
@@ -23,13 +24,15 @@ export type SubCategoryDataType = {
   title: string;
   price: number;
   time: number;
-  category: Object;
+  category: CategoryDataType;
 }
 
 export type CategoryDataType = {
   _id: string;
+  business: BusinessDataType;
   name: string;
-  weight: number;
+  description: string;
+  subcategories: SubCategoryDataType[];
 }
 
 export type TimeAvailableForAppointment = {
