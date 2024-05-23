@@ -36,7 +36,7 @@ const SubCategoryItem = ({ category, subCategory }) => {
         <View style={styles.actionSubCategory}>
           <View style={styles.header}>
             <Button title="EDIT" onPress={editSubCategory} />
-            <Button title="DELETE" onPress={deleteSubCategory} />
+            {/*<Button title="DELETE" onPress={deleteSubCategory} />*/}
           </View>
         </View>
       </View>

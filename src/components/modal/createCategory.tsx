@@ -4,10 +4,12 @@ import { RHFTextField } from "..";
 import { FormProvider, useForm } from "react-hook-form";
 import { CategoryDataType } from "../../screens/types";
 import { useDispatch, useSelector } from "react-redux";
-import { postCategoryAPIAction } from "../../store/category/actions";
+import { postCategoryAPIAction, putCategoryAPIAction } from "../../store/category/actions";
 import { StoreRootState } from "../../store/store";
+import { modalCreateCategoryVisibleAPIAction } from "../../store/modals/actions";
+import { initialStateSubCategoryAPIAction } from "../../store/subCategory/actions";
 
-const CreateCategory = ({ modalCreateCategoryVisible, setModalCreateCategoryVisible }) => {
+const CreateCategory = () => {
   const dispatch = useDispatch<any>();
   const form = useForm<CategoryDataType>();
 
@@ -15,6 +17,10 @@ const CreateCategory = ({ modalCreateCategoryVisible, setModalCreateCategoryVisi
   const [descriptionBussines, setDescriptionBussines] = useState<string | undefined>("");
 
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
+
+  const modalCreateCategoryAPI = useSelector((state: StoreRootState) => state?.modals?.modalCreateCategory ?? undefined);
+  const modeModalCategoryAPI = useSelector((state: StoreRootState) => state?.modals?.modeModalCategory ?? undefined);
+  const categorySelectModalCategoryAPI = useSelector((state: StoreRootState) => state?.modals?.categorySelectModalCategory ?? undefined);
 
   const clearForm = () => {
     console.log("clearForm- INI");
@@ -25,35 +31,62 @@ const CreateCategory = ({ modalCreateCategoryVisible, setModalCreateCategoryVisi
   };
 
   useEffect(() => {
-    clearForm();
-  }, [modalCreateCategoryVisible]);
+    dispatch(initialStateSubCategoryAPIAction());
+  }, [modalCreateCategoryAPI]);
+
+  const closeModal = () => {
+    dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: false, mode: "" }));
+  };
+
+  useEffect(() => {
+    if (modeModalCategoryAPI == "new") {
+      clearForm();
+    }
+    if (modeModalCategoryAPI == "edit") {
+      setNameBussines(categorySelectModalCategoryAPI?.name);
+      setDescriptionBussines(categorySelectModalCategoryAPI?.description);
+    }
+  }, [modeModalCategoryAPI]);
 
   const createCategory = () => {
-    dispatch(
-      postCategoryAPIAction({
-        business: userData?.my_business?._id,
-        name: nameBussines,
-        description: descriptionBussines,
-      })
-    );
+    if (modeModalCategoryAPI == "new") {
+      dispatch(
+        postCategoryAPIAction({
+          business: userData?.my_business?._id,
+          name: nameBussines,
+          description: descriptionBussines,
+        })
+      );
+    }
+    if (modeModalCategoryAPI == "edit") {
+      dispatch(
+        putCategoryAPIAction({
+          _id: categorySelectModalCategoryAPI?._id,
+          business: userData?.my_business?._id,
+          name: nameBussines,
+          description: descriptionBussines,
+        })
+      );
+    }
 
-    setModalCreateCategoryVisible(false);
+    closeModal();
   };
+
 
   return (
     <View style={styles.centeredView}>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalCreateCategoryVisible}
+        visible={modalCreateCategoryAPI}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
-          setModalCreateCategoryVisible(!modalCreateCategoryVisible);
+          closeModal();
         }}
       >
         <View style={styles.overlay}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            <Text style={styles.modalText}>Create a new category</Text>
 
             {/* FORM NEW CATEGORY */}
 
@@ -83,7 +116,7 @@ const CreateCategory = ({ modalCreateCategoryVisible, setModalCreateCategoryVisi
                 </TouchableOpacity>*/}
 
             <View style={styles.listButton}>
-              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalCreateCategoryVisible(!modalCreateCategoryVisible)}>
+              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => closeModal()}>
                 <Text style={styles.textStyle}>Cancel</Text>
               </Pressable>
               <Pressable

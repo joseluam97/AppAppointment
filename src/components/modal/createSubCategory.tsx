@@ -25,8 +25,6 @@ const CreateSubCategory = () => {
   const categorySelectModalSubCategoryAPI = useSelector((state: StoreRootState) => state?.modals?.categorySelectModalSubCategory ?? undefined);
   const subCategorySelectModalSubCategoryAPI = useSelector((state: StoreRootState) => state?.modals?.subCategorySelectModalSubCategory ?? undefined);
 
-  const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
-
   const clearForm = () => {
     // Clear form
     setTitleSubCategory("");
@@ -78,7 +76,6 @@ const CreateSubCategory = () => {
   };
 
   const closeModal = () => {
-    console.log("-EXECUTION closeModal-");
     dispatch(modalCreateSubCategoryVisibleAPIAction({ isVisible: false, mode: "" }));
   };
 

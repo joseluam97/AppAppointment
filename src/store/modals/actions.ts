@@ -1,4 +1,4 @@
-import { INIT_VALUE_MODALS, MODAL_CREATE_SUB_CATEGORY } from "./types";
+import { INIT_VALUE_MODALS, MODAL_CREATE_SUB_CATEGORY, MODAL_CREATE_CATEGORY } from "./types";
 
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
@@ -11,5 +11,12 @@ export const modalCreateSubCategoryVisibleAPIAction = createAsyncThunk(
   MODAL_CREATE_SUB_CATEGORY,
   async ({ isVisible, mode, category = undefined, subCategory = undefined }: { isVisible: boolean; mode: string; category: CategoryDataType; subCategory: SubCategoryDataType}) => {
     return { isVisible, mode, category, subCategory };
+  }
+);
+
+export const modalCreateCategoryVisibleAPIAction = createAsyncThunk(
+  MODAL_CREATE_CATEGORY,
+  async ({ isVisible, mode, category = undefined }: { isVisible: boolean; mode: string; category: CategoryDataType}) => {
+    return { isVisible, mode, category };
   }
 );

@@ -8,7 +8,7 @@ import { CategoryDataType } from "../types";
 import { getCategoryByBusinessAPIAction, postCategoryAPIAction } from "../../store/category/actions";
 import CategoryItem from "../../components/ui/category_item";
 import CreateCategory from "../../components/modal/createCategory";
-import { initialStateModalsAPIAction } from "../../store/modals/actions";
+import { initialStateModalsAPIAction, modalCreateCategoryVisibleAPIAction } from "../../store/modals/actions";
 import CreateSubCategory from "../../components/modal/createSubCategory";
 
 export default function Categories({ navigation }: any) {
@@ -16,7 +16,6 @@ export default function Categories({ navigation }: any) {
   const dispatch = useDispatch<any>();
   const isFocused = useIsFocused();
 
-  const [modalCreateCategoryVisible, setModalCreateCategoryVisible] = useState(false);
   const [listCategory, setListCategory] = useState<CategoryDataType[]>();
 
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
@@ -24,6 +23,9 @@ export default function Categories({ navigation }: any) {
 
   const resultPostSubCategoryAPI = useSelector((state: StoreRootState) => state?.subCategory?.resultPost ?? undefined);
   const resultPutSubCategoryAPI = useSelector((state: StoreRootState) => state?.subCategory?.resultPut ?? undefined);
+  const resultPostCategoryAPI = useSelector((state: StoreRootState) => state?.category?.resultPost ?? undefined);
+  const resultPutCategoryAPI = useSelector((state: StoreRootState) => state?.category?.resultPut ?? undefined);
+  const modalCreateCategoryAPI = useSelector((state: StoreRootState) => state?.modals?.modalCreateCategory ?? undefined);
 
   useEffect(() => {
     if (isFocused) {
@@ -35,13 +37,13 @@ export default function Categories({ navigation }: any) {
 
   useEffect(() => {
     dispatch(getCategoryByBusinessAPIAction(userData?.my_business?._id));
-  }, [modalCreateCategoryVisible]);
+  }, [modalCreateCategoryAPI]);
   
   useEffect(() => {
     if(resultPostSubCategoryAPI == true || resultPutSubCategoryAPI == true){
       dispatch(getCategoryByBusinessAPIAction(userData?.my_business?._id));
     }
-  }, [resultPostSubCategoryAPI, resultPutSubCategoryAPI]);
+  }, [resultPostSubCategoryAPI, resultPutSubCategoryAPI, resultPostCategoryAPI, resultPutCategoryAPI]);
 
   useEffect(() => {
     if(listCategoryAPI != undefined){
@@ -51,7 +53,12 @@ export default function Categories({ navigation }: any) {
   }, [listCategoryAPI]);
 
   const createCategory = () => {
-    setModalCreateCategoryVisible(!modalCreateCategoryVisible);
+    if(modalCreateCategoryAPI == true){
+      dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: true, mode: "new" }));
+    }
+    if(modalCreateCategoryAPI == false){
+      dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: false, mode: "" }));
+    }
   };
 
   return (
@@ -79,10 +86,7 @@ export default function Categories({ navigation }: any) {
           <Text>No categories were found.</Text>
         </View>
       )}
-      <CreateCategory 
-        modalCreateCategoryVisible={modalCreateCategoryVisible} 
-        setModalCreateCategoryVisible={setModalCreateCategoryVisible}
-      />
+      <CreateCategory />
       <CreateSubCategory />
     </View>
   );
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContainer: {
-    flex: 0.48,
+    flex: 1,
   },
   centeredContainer: {
     alignItems: "center",

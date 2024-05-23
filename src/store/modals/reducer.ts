@@ -1,8 +1,14 @@
 import { AppointmentDataType, SubCategoryDataType, CategoryDataType, TimeAvailableForAppointment } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
-import { modalCreateSubCategoryVisibleAPIAction, initialStateModalsAPIAction} from "./actions";
+import { modalCreateSubCategoryVisibleAPIAction, initialStateModalsAPIAction, modalCreateCategoryVisibleAPIAction} from "./actions";
 
 type InitialStateType = {
+  // MODAL CREATION CATEGORY
+  modalCreateCategory: boolean;
+  modeModalCategory: string;
+  categorySelectModalCategory: CategoryDataType | undefined;
+
+  // MODAL CREATION SUB CATEGORY
   modalCreateSubCategory: boolean;
   modeModalSubCategory: string;
   categorySelectModalSubCategory: CategoryDataType | undefined;
@@ -11,7 +17,9 @@ type InitialStateType = {
 
 const initialState: InitialStateType = {
   // MODAL CREATION CATEGORY
-  // TO-DO
+  modalCreateCategory: false,
+  modeModalCategory: "",
+  categorySelectModalCategory: undefined,
 
   // MODAL CREATION SUB CATEGORY
   modalCreateSubCategory: false,
@@ -22,6 +30,14 @@ const initialState: InitialStateType = {
 
 export default createReducer(initialState, (builder) => {
   builder
+    .addCase(modalCreateCategoryVisibleAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        modalCreateCategory: action.payload.isVisible,
+        modeModalCategory: action.payload.mode,
+        categorySelectModalCategory: {...action.payload.category},
+      };
+    })
     .addCase(modalCreateSubCategoryVisibleAPIAction.fulfilled, (state, action) => {
       return {
         ...state,

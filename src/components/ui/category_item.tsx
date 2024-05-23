@@ -7,7 +7,7 @@ import { AppointmentDataType, CategoryDataType } from "../../screens/types";
 import SubCategoryItem from "./subCategory_item";
 import CreateSubCategory from "../modal/createSubCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { modalCreateSubCategoryVisibleAPIAction } from "../../store/modals/actions";
+import { modalCreateCategoryVisibleAPIAction, modalCreateSubCategoryVisibleAPIAction } from "../../store/modals/actions";
 
 const CategoryItem = ({ category }) => {
   const dispatch = useDispatch<any>();
@@ -23,12 +23,20 @@ const CategoryItem = ({ category }) => {
     dispatch(modalCreateSubCategoryVisibleAPIAction({isVisible: true, mode: "new", category: category}))
   };
 
+  const editCategory = () => {
+    console.log("Edit category")
+    dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: true, mode: "edit", category: category }));
+  };
+
   return (
     <>
       <View style={styles.container}>
       
         <TouchableOpacity style={styles.header} onPress={toggleDetails}>
-          <Text style={styles.title}>{category?.name}</Text>
+          <View style={styles.title_category}>
+            <Text style={styles.title}>{category?.name}</Text>
+            <MaterialIcons name="edit" size={24} color="#888" onPress={editCategory} />
+          </View>
           <Text style={styles.description}>{category?.description}</Text>
           <MaterialIcons style={styles.icon} name={showDetails ? "keyboard-arrow-up" : "keyboard-arrow-down"} size={24} color="#888" />
         </TouchableOpacity>
@@ -81,10 +89,14 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 0,
   },
+  title_category: {
+    flexDirection: "row",
+    width: "40%"
+  },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    width: "40%"
+    paddingRight: 10
   },
   description: {
     fontSize: 12,
