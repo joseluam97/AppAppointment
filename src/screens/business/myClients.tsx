@@ -5,6 +5,7 @@ import { Avatar, Card, IconButton, Menu, Provider as PaperProvider } from "react
 import { getMyClientsAPIAction } from "../../store/user/actions";
 import { StoreRootState } from "../../store/store";
 import { UserDataType } from "../types";
+import { getFullName, getLabelName } from "../../components/utils";
 
 export default function MyClients({ navigation }: any) {
   const dispatch = useDispatch<any>();
@@ -24,17 +25,6 @@ export default function MyClients({ navigation }: any) {
       setListMyClients(listClients);
     }
   }, [listMyClientsAPI]);
-
-  const getFullName = (client: UserDataType) => `${client.first_name} ${client.last_name}`;
-
-  const getLabelName = (client: UserDataType) => {
-    if (client.first_name.indexOf(" ") === -1) {
-      return client.first_name[0] + client.last_name[0];
-    } else {
-      let array_name = client.first_name.split(" ");
-      return array_name.length === 2 ? array_name[0][0] + array_name[1][0] : client.first_name[0];
-    }
-  };
 
   const openMenu = (index: number) => {
     setVisibleMenuIndex(index);

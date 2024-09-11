@@ -58,69 +58,31 @@ export function DrawerRoutes() {
 
   return (
     <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />}>
-      
-      <Drawer.Screen 
-        name="appointment" 
-        component={AddApointmentScreen} 
-      />
-          
       {exitsLogin ? (
         <>
-          <Drawer.Screen 
-            name="home" 
-            component={HomeScreen} 
-          />
+          <Drawer.Screen name="appointment" component={AddApointmentScreen} />
 
-          <Drawer.Screen 
-            name="settings"
-            component={HomeScreen}
-          />
-          
-          <Drawer.Screen 
-            name="categories"
-            component={Categories}
-          />
-          
-          <Drawer.Screen 
-            name="myClients"
-            component={MyClients}
-          />
+          <Drawer.Screen name="home" component={HomeScreen} />
 
-          <Drawer.Screen 
-            name="myProfile" 
-            component={MyProfile} 
-          />
+          <Drawer.Screen name="settings" component={HomeScreen} />
 
-          <Drawer.Screen 
-            name="listAppointment" 
-            component={ListAppointmentScreen} 
-          />
+          <Drawer.Screen name="categories" component={Categories} />
 
-          <Drawer.Screen 
-            name="createBusiness" 
-            component={CreateBusiness} 
-            options={{ title: "Add your business" }} 
-          />
+          <Drawer.Screen name="myClients" component={MyClients} />
 
-          <Drawer.Screen 
-            name="myBusiness" 
-            component={MyBusiness} 
-          />
+          <Drawer.Screen name="myProfile" component={MyProfile} />
 
-          <Drawer.Screen 
-            name="searchBusiness" 
-            component={ListBusiness} 
-          />
-          <Drawer.Screen 
-            name="logOut" 
-            component={LogOut} 
-          />
+          <Drawer.Screen name="listAppointment" component={ListAppointmentScreen} />
+
+          <Drawer.Screen name="createBusiness" component={CreateBusiness} options={{ title: "Add your business" }} />
+
+          <Drawer.Screen name="myBusiness" component={MyBusiness} />
+
+          <Drawer.Screen name="searchBusiness" component={ListBusiness} />
+          <Drawer.Screen name="logOut" component={LogOut} />
         </>
       ) : (
-        <Drawer.Screen 
-          name="login" 
-          component={LoginScreen} 
-        />
+        <Drawer.Screen name="login" component={LoginScreen} />
       )}
     </Drawer.Navigator>
   );

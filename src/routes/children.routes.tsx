@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { useSelector } from 'react-redux';
 import { StoreRootState } from '../store/store';
+import { getFullName } from '../components/utils';
 
 const CustomDrawerContent = (props) => {
 
@@ -44,7 +45,10 @@ const CustomDrawerContent = (props) => {
   }, []);
   
   return (
+    
     <DrawerContentScrollView {...props}>
+
+      <Text>{getFullName(userData)}</Text>
 
       <DrawerItem
         label="Home"
@@ -80,10 +84,16 @@ const CustomDrawerContent = (props) => {
         </View>
       )}
 
-      <DrawerItem
+      {exitsBussines == true && (<DrawerItem
         label="Appointments"
         onPress={() => props.navigation.navigate('listAppointment')}
-      />
+      />)}
+
+      {exitsBussines == false && (<DrawerItem
+        label="New Appointment"
+        onPress={() => props.navigation.navigate('appointment')}
+      />)}
+
       <DrawerItem
         label="Search Business"
         onPress={() => props.navigation.navigate('searchBusiness')}
