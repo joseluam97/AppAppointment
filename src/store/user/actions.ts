@@ -1,4 +1,4 @@
-import { LOGIN_USER, INIT_VALUE, LOG_OUT_USER, PUT_USER } from "./types";
+import { LOGIN_USER, INIT_VALUE, LOG_OUT_USER, PUT_USER, GET_MY_CLIENTS } from "./types";
 
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
@@ -43,7 +43,22 @@ export const loginUserAPIAction = createAsyncThunk(LOGIN_USER, async (userInfo: 
       email: userInfo.email,
       password: userInfo.password,
     });
+    
+    // Devuelve los datos del usuario si la solicitud es exitosa
+    return response.data;
+  } catch (error) {
+    // Maneja cualquier error que ocurra durante la solicitud
+    console.error("Error during login:", error);
+    throw error;
+  }
+});
 
+export const getMyClientsAPIAction = createAsyncThunk(GET_MY_CLIENTS, async (idBusiness: string) => {
+  try {
+    // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
+    const urlUserByBusiness = `${urlUser}/byBusiness/${idBusiness}`;
+    const response = await axios.get(urlUserByBusiness);
+    
     // Devuelve los datos del usuario si la solicitud es exitosa
     return response.data;
   } catch (error) {

@@ -4,19 +4,22 @@ import {
   loginUserAPIAction,
   initValue,
   logUserAPIAction,
-  putUserAPIAction
+  putUserAPIAction,
+  getMyClientsAPIAction
 } from "./actions";
 
 type InitialStateType = {
   loggedin: boolean | undefined;
   userData: UserDataType | undefined;
   resultPut: boolean | undefined;
+  listMyClients: UserDataType[] | undefined;
 };
 
 const initialState: InitialStateType = {
   loggedin: undefined,
   userData: undefined,
   resultPut: undefined,
+  listMyClients: []
 };
 
 export default createReducer(initialState, (builder) => {
@@ -28,6 +31,12 @@ export default createReducer(initialState, (builder) => {
     return {
       loggedin: undefined,
       userData: undefined,
+    };
+  })
+  .addCase(getMyClientsAPIAction.fulfilled, (state, action) => {
+    return {
+      ...state,
+      listMyClients: { ...action.payload },
     };
   })
   .addCase(putUserAPIAction.pending, (state, action) => {
