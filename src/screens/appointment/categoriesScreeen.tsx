@@ -54,10 +54,10 @@ export default function Categories({ navigation }: any) {
 
   const createCategory = () => {
     if(modalCreateCategoryAPI == true){
-      dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: true, mode: "new" }));
+      dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: false, mode: "new" }));
     }
     if(modalCreateCategoryAPI == false){
-      dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: false, mode: "" }));
+      dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: true, mode: "new" }));
     }
   };
 
@@ -74,7 +74,6 @@ export default function Categories({ navigation }: any) {
           data={listCategory}
           renderItem={({ item }) => (
             <View style={styles.appointmentItemContainer}>
-              {/*<AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={openAll} />*/}
               <CategoryItem category={item} />
             </View>
           )}
