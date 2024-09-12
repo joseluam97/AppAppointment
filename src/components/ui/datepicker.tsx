@@ -66,7 +66,6 @@ const stylePicker = StyleSheet.create({
   container: {
     marginVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#fff",
     borderRadius: 10,
   },
   label: {

@@ -1,4 +1,4 @@
-import { GET_APPOINTMENT_WITH_FILTERS, POST_APPOINTMENT, GET_ALL_APPOINTMENT, GET_ALL_TYPES_APPOINTMENT, GET_ALL_BREED, GET_TYPES_APPOINTMENT_BY_BREED, GET_TIME_AVAILABLE_APPOINTMENT } from "./types";
+import { RESET_PUT_APPOINTMENT, PUT_APPOINTMENT, GET_APPOINTMENT_WITH_FILTERS, POST_APPOINTMENT, GET_ALL_APPOINTMENT, GET_ALL_TYPES_APPOINTMENT, GET_ALL_BREED, GET_TYPES_APPOINTMENT_BY_BREED, GET_TIME_AVAILABLE_APPOINTMENT } from "./types";
 
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
@@ -10,14 +10,12 @@ const urlAppointment = "http://192.168.1.142:3100/appointment";
 const urlSubCategory = "http://192.168.1.142:3100/subCategory";
 
 export const initialStateAPIAction = createAction("initialState/set");
+export const resetPutAppointment = createAction(RESET_PUT_APPOINTMENT);
 
 //APOINTMENT
 export const getApointmentsWithFiltersAPIAction = createAsyncThunk(GET_APPOINTMENT_WITH_FILTERS, async ({business_appointment, date_selected}: {business_appointment: BusinessDataType, date_selected: any}) => {
   try {
-    console.log("-getApointmentsWithFiltersAPIAction-")
-    console.log(business_appointment?._id)
-    console.log(date_selected)
-    console.log("-getApointmentsWithFiltersAPIAction-")
+    console.log("-EXECUTE UPDATE-")
     // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
       const urlTimeAvailableAppointment = `${urlAppointment}/filters/`;
     const response = await axios.post(urlTimeAvailableAppointment, {
@@ -76,6 +74,24 @@ export const postAppointmentAPIAction = createAsyncThunk(
     try {
       // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
       const response = await axios.post(urlAppointment, data_appointment);
+
+      // Devuelve los datos del usuario si la solicitud es exitosa
+      return response.data;
+    } catch (error) {
+      // Maneja cualquier error que ocurra durante la solicitud
+      console.error("Error during login:", error);
+      throw error;
+    }
+  }
+);
+
+export const putAppointmentAPIAction = createAsyncThunk(
+  PUT_APPOINTMENT,
+  async (data_appointment: AppointmentDataType) => {
+    try {
+      // Realiza una solicitud PUT a la ruta de inicio de sesión en tu servidor
+      const urlTypesAppointmentByCategory = `${urlAppointment}/${data_appointment._id}`;
+      const response = await axios.put(urlTypesAppointmentByCategory, data_appointment);
 
       // Devuelve los datos del usuario si la solicitud es exitosa
       return response.data;

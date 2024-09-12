@@ -17,6 +17,8 @@ export type AppointmentDataType = {
   type: Object;
   date_appointment: Date;
   description: string;
+  complete: boolean;
+  approved: boolean;
 };
 
 export type SubCategoryDataType = {

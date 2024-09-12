@@ -3,7 +3,7 @@ import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet } from "reac
 import { FormProvider, useForm } from "react-hook-form";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllApointmentAPIAction, getApointmentsWithFiltersAPIAction } from "../../store/appointment/actions";
+import { getAllApointmentAPIAction, getApointmentsWithFiltersAPIAction, resetPutAppointment } from "../../store/appointment/actions";
 import AppointmentItem from "../../components/ui/appointment_item";
 import DatePicker from "../../components/ui/datepicker";
 import { StoreRootState } from "../../store/store";
@@ -22,10 +22,13 @@ const Dates = () => {
   const [listCategory, setListCategory] = useState<CategoryDataType[]>();
   const [openAll, setOpenAll] = useState<boolean | undefined>(undefined);
   const [dateAppointmentSelected, setDateAppointmentSelected] = useState<Date | undefined>(new Date());
+  const [seeAppointmentByFilters, setSeeAppointmentByFilters] = useState<boolean | undefined>(false);
+  const [seeAppointmentByPendingApproved, setSeeAppointmentByPendingApproved] = useState<boolean | undefined>(false);
 
   const listCategoryAPI = useSelector((state: StoreRootState) => state?.appointment?.listCategoryAPI ?? []);
   const listAppointmentAPI = useSelector((state: StoreRootState) => state?.appointment?.listAppointmentAPI ?? []);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
+  const resultPutAppointment = useSelector((state: StoreRootState) => state?.appointment?.resultPut ?? false);
 
   useEffect(() => {
     //dispatch(getAllApointmentAPIAction());
@@ -40,6 +43,16 @@ const Dates = () => {
       setDateAppointmentSelected(new Date());
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (resultPutAppointment == true) {
+      dispatch(getApointmentsWithFiltersAPIAction({
+        business_appointment: userData?.my_business, 
+        date_selected: dateAppointmentSelected
+      }));
+      dispatch(resetPutAppointment());
+    }
+  }, [resultPutAppointment]);
 
   useEffect(() => {
     if (listAppointmentAPI != undefined && listAppointmentAPI.length != 0) {
@@ -63,10 +76,36 @@ const Dates = () => {
     setOpenAll(openAll === undefined || !openAll);
   };
 
+  const filterByCompleteOrNot = () => {
+    if(!seeAppointmentByFilters == true){
+      const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
+      const listAppointmentFilter: AppointmentDataType[] = appointmentList?.filter(element => element.complete != true);
+      setListAppointment(listAppointmentFilter);
+    }
+    else{
+      const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
+      setListAppointment(appointmentList);
+    }
+    setSeeAppointmentByFilters(!seeAppointmentByFilters)
+    setSeeAppointmentByPendingApproved(false)
+  };
+
+  const filterByPendingApproved = () => {
+    if(!seeAppointmentByPendingApproved == true){
+      const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
+      const listAppointmentFilter: AppointmentDataType[] = appointmentList?.filter(element => element.approved != true);
+      setListAppointment(listAppointmentFilter);
+    }
+    else{
+      const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
+      setListAppointment(appointmentList);
+    }
+    setSeeAppointmentByPendingApproved(!seeAppointmentByPendingApproved)
+    setSeeAppointmentByFilters(false)
+  };
+
   const changeDateAppointment = (selectedItem: Date) => {
     setDateAppointmentSelected(new Date(selectedItem));
-    console.log(userData?.my_business)
-    console.log(new Date(selectedItem)?.toISOString())
 
     dispatch(getApointmentsWithFiltersAPIAction({
       business_appointment: userData?.my_business, 
@@ -96,6 +135,12 @@ const Dates = () => {
         </View>
         <View style={styles.buttonContainer}>
           <Button title={openAll ? "CLOSE ALL" : "OPEN ALL"} onPress={expandAllAppointment} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title={seeAppointmentByFilters ? "SEE ALL" : "SEE UNCOMPLETES ONES"} onPress={filterByCompleteOrNot} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title={seeAppointmentByPendingApproved ? "SEE ALL" : "SEE PENDING APPROVAL"} onPress={filterByPendingApproved} />
         </View>
       </View>
 
@@ -153,7 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContainer: {
-    flex: 0.48,
+    flex: 0.20,
   },
   centeredContainer: {
     alignItems: "center",

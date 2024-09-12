@@ -7,11 +7,14 @@ import {
   getTypesApointmentByCategoryAPIAction,
   getTimeAvailableAppointmentAPIAction,
   postAppointmentAPIAction,
-  getApointmentsWithFiltersAPIAction
+  getApointmentsWithFiltersAPIAction,
+  putAppointmentAPIAction,
+  resetPutAppointment
 } from "./actions";
 
 type InitialStateType = {
   resultPost: boolean;
+  resultPut: boolean;
   loggedin: boolean;
   listAppointmentAPI: AppointmentDataType[] | undefined;
   listSubCategoryAPI: SubCategoryDataType[] | undefined;
@@ -21,6 +24,7 @@ type InitialStateType = {
 
 const initialState: InitialStateType = {
   resultPost: false,
+  resultPut: false,
   loggedin: false,
   listAppointmentAPI: [],
   listSubCategoryAPI: [],
@@ -48,6 +52,18 @@ export default createReducer(initialState, (builder) => {
       return {
         ...state,
         resultPost: true,
+      };
+    })
+    .addCase(putAppointmentAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        resultPut: true,
+      };
+    })
+    .addCase(resetPutAppointment, (state, action) => {
+      return {
+        ...state,
+        resultPut: false,
       };
     })
     .addCase(getTimeAvailableAppointmentAPIAction.fulfilled, (state, action) => {

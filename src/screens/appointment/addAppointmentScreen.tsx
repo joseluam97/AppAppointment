@@ -95,6 +95,8 @@ export default function Dates({ navigation }: any): JSX.Element {
             type: typeServiceSelected,
             date_appointment: date_appointment,
             description: "Creada desde APP",
+            complete: false,
+            approved: true,
           })
         );
 
@@ -109,6 +111,8 @@ export default function Dates({ navigation }: any): JSX.Element {
             type: typeServiceSelected,
             date_appointment: date_appointment,
             description: "Creada desde APP",
+            complete: false,
+            approved: false,
           })
         );
 
