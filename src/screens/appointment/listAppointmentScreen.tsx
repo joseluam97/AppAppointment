@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { FormProvider, useForm } from "react-hook-form";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import DatePicker from "../../components/ui/datepicker";
 import { StoreRootState } from "../../store/store";
 import { AppointmentDataType, CategoryDataType } from "../types";
 import { Icons } from "../../components";
+import { Button, FAB, PaperProvider } from "react-native-paper";
 
 const Dates = () => {
   const navigation = useNavigation();
@@ -36,20 +37,24 @@ const Dates = () => {
 
   useEffect(() => {
     if (isFocused) {
-      dispatch(getApointmentsWithFiltersAPIAction({
-        business_appointment: userData?.my_business, 
-        date_selected: new Date().toISOString()
-      }));
+      dispatch(
+        getApointmentsWithFiltersAPIAction({
+          business_appointment: userData?.my_business,
+          date_selected: new Date().toISOString(),
+        })
+      );
       setDateAppointmentSelected(new Date());
     }
   }, [isFocused]);
 
   useEffect(() => {
     if (resultPutAppointment == true) {
-      dispatch(getApointmentsWithFiltersAPIAction({
-        business_appointment: userData?.my_business, 
-        date_selected: dateAppointmentSelected
-      }));
+      dispatch(
+        getApointmentsWithFiltersAPIAction({
+          business_appointment: userData?.my_business,
+          date_selected: dateAppointmentSelected,
+        })
+      );
       dispatch(resetPutAppointment());
     }
   }, [resultPutAppointment]);
@@ -77,40 +82,40 @@ const Dates = () => {
   };
 
   const filterByCompleteOrNot = () => {
-    if(!seeAppointmentByFilters == true){
+    if (!seeAppointmentByFilters == true) {
       const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
-      const listAppointmentFilter: AppointmentDataType[] = appointmentList?.filter(element => element.complete != true);
+      const listAppointmentFilter: AppointmentDataType[] = appointmentList?.filter((element) => element.complete != true);
       setListAppointment(listAppointmentFilter);
-    }
-    else{
+    } else {
       const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
       setListAppointment(appointmentList);
     }
-    setSeeAppointmentByFilters(!seeAppointmentByFilters)
-    setSeeAppointmentByPendingApproved(false)
+    setSeeAppointmentByFilters(!seeAppointmentByFilters);
+    setSeeAppointmentByPendingApproved(false);
   };
 
   const filterByPendingApproved = () => {
-    if(!seeAppointmentByPendingApproved == true){
+    if (!seeAppointmentByPendingApproved == true) {
       const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
-      const listAppointmentFilter: AppointmentDataType[] = appointmentList?.filter(element => element.approved != true);
+      const listAppointmentFilter: AppointmentDataType[] = appointmentList?.filter((element) => element.approved != true);
       setListAppointment(listAppointmentFilter);
-    }
-    else{
+    } else {
       const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
       setListAppointment(appointmentList);
     }
-    setSeeAppointmentByPendingApproved(!seeAppointmentByPendingApproved)
-    setSeeAppointmentByFilters(false)
+    setSeeAppointmentByPendingApproved(!seeAppointmentByPendingApproved);
+    setSeeAppointmentByFilters(false);
   };
 
   const changeDateAppointment = (selectedItem: Date) => {
     setDateAppointmentSelected(new Date(selectedItem));
 
-    dispatch(getApointmentsWithFiltersAPIAction({
-      business_appointment: userData?.my_business, 
-      date_selected: new Date(selectedItem)?.toISOString()
-    }));
+    dispatch(
+      getApointmentsWithFiltersAPIAction({
+        business_appointment: userData?.my_business,
+        date_selected: new Date(selectedItem)?.toISOString(),
+      })
+    );
   };
 
   const previusDay = () => {
@@ -119,7 +124,7 @@ const Dates = () => {
 
     changeDateAppointment(new Date(date_previus));
   };
-  
+
   const nextDay = () => {
     let date_previus: Date = dateAppointmentSelected;
     date_previus.setDate(date_previus.getDate() + 1);
@@ -128,62 +133,76 @@ const Dates = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.buttonRow}>
-        <View style={styles.buttonContainer}>
-          <Button title="CREATE NEW APPOINTMENT" onPress={createNewAppointment} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title={openAll ? "CLOSE ALL" : "OPEN ALL"} onPress={expandAllAppointment} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title={seeAppointmentByFilters ? "SEE ALL" : "SEE UNCOMPLETES ONES"} onPress={filterByCompleteOrNot} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title={seeAppointmentByPendingApproved ? "SEE ALL" : "SEE PENDING APPROVAL"} onPress={filterByPendingApproved} />
-        </View>
-      </View>
-
-      <View style={styles.centeredContainer}>
-        <FormProvider {...form}>
-          <View style={styles.content}>
-            <TouchableOpacity onPress={previusDay} style={styles.widthIcons}>
-              <Icons iconSet="AntDesign" name="caretleft" color="#000000" size={16} />
-            </TouchableOpacity>
-            <View style={styles.widthSelector}>
-              <DatePicker
-                name="dateAppointment"
-                placeholder="Select the date to view appointments"
-                label="Select the date to view appointments"
-                value={dateAppointmentSelected}
-                onChange={changeDateAppointment}
-                mode="date"
-              />
-            </View>
-            <TouchableOpacity onPress={nextDay} style={styles.widthIcons}>
-              <Icons iconSet="AntDesign" name="caretright" color="#000000" size={16} />
-            </TouchableOpacity>
+    <PaperProvider>
+      <View style={styles.container}>
+        <View style={styles.buttonRow}>
+          <View style={styles.buttonContainer}>
+            <Button mode="contained" onPress={expandAllAppointment}>
+              {openAll ? "CONTRACT ALL" : "EXPAND ALL"}
+            </Button>
           </View>
-        </FormProvider>
-      </View>
+          <View style={styles.buttonContainer}>
+            <Button mode="contained" onPress={filterByCompleteOrNot}>
+              {seeAppointmentByFilters ? "SEE ALL" : "SEE UNCOMPLETES ONES"}
+            </Button>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button mode="contained" onPress={filterByPendingApproved}>
+              {seeAppointmentByPendingApproved ? "SEE ALL" : "SEE PENDING APPROVAL"}
+            </Button>
 
-      {listAppointment?.length != 0 ? (
-        <FlatList
-          data={listAppointment}
-          renderItem={({ item }) => (
-            <View style={styles.appointmentItemContainer}>
-              <AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={openAll} />
-            </View>
-          )}
-          keyExtractor={(item) => item._id}
-          contentContainerStyle={styles.flatListContent}
-        />
-      ) : (
-        <View style={styles.containerWarning}>
-          <Text>No appointments were found for this day.</Text>
+          </View>
         </View>
-      )}
-    </View>
+
+        <View style={styles.centeredContainer}>
+          <FormProvider {...form}>
+            <View style={styles.content}>
+              <TouchableOpacity onPress={previusDay} style={styles.widthIcons}>
+                <Icons iconSet="AntDesign" name="caretleft" color="#000000" size={16} />
+              </TouchableOpacity>
+              <View style={styles.widthSelector}>
+                <DatePicker
+                  name="dateAppointment"
+                  placeholder="Select the date to view appointments"
+                  label="Select the date to view appointments"
+                  value={dateAppointmentSelected}
+                  onChange={changeDateAppointment}
+                  mode="date"
+                />
+              </View>
+              <TouchableOpacity onPress={nextDay} style={styles.widthIcons}>
+                <Icons iconSet="AntDesign" name="caretright" color="#000000" size={16} />
+              </TouchableOpacity>
+            </View>
+          </FormProvider>
+        </View>
+
+        {listAppointment?.length != 0 ? (
+          <FlatList
+            data={listAppointment}
+            renderItem={({ item }) => (
+              <View style={styles.appointmentItemContainer}>
+                <AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={openAll} />
+              </View>
+            )}
+            keyExtractor={(item) => item._id}
+            contentContainerStyle={styles.flatListContent}
+          />
+        ) : (
+          <View style={styles.containerWarning}>
+            <Text>No appointments were found for this day.</Text>
+          </View>
+        )}
+
+        <FAB
+          style={styles.fab}
+          icon="plus"
+          onPress={() => {
+            navigation.navigate('appointment');
+          }}
+        />
+      </View>
+    </PaperProvider>
   );
 };
 
@@ -198,7 +217,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContainer: {
-    flex: 0.20,
+    flex: 0.33,
   },
   centeredContainer: {
     alignItems: "center",
@@ -230,7 +249,7 @@ const styles = StyleSheet.create({
     width: "25%",
     alignItems: "center",
     justifyContent: "center", // Centrar verticalmente
-    padding: 20
+    padding: 20,
   },
   widthSelector: {
     width: "50%",
@@ -239,6 +258,12 @@ const styles = StyleSheet.create({
   containerWarning: {
     marginTop: 20,
     alignItems: "center",
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 10,
+    bottom: 10,
   },
 });
 

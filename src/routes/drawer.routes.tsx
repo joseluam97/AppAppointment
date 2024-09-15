@@ -16,6 +16,7 @@ import Categories from "../screens/appointment/categoriesScreeen";
 import MyBusiness from "../screens/business/myBusiness";
 import MyProfile from "../screens/user/myProfile";
 import MyClients from "../screens/business/myClients";
+import { IconButton } from "react-native-paper";
 
 const Drawer = createDrawerNavigator();
 
@@ -60,26 +61,34 @@ export function DrawerRoutes() {
     <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />}>
       {exitsLogin ? (
         <>
-          <Drawer.Screen name="appointment" component={AddApointmentScreen} />
+          <Drawer.Screen name="appointment" component={AddApointmentScreen} options={{ title: "Appointment" }} />
+          <Drawer.Screen name="home" component={HomeScreen} options={{ title: "Home" }} />
+          <Drawer.Screen name="settings" component={HomeScreen} options={{ title: "Settings" }} />
+          <Drawer.Screen name="categories" component={Categories} options={{ title: "Categories" }} />
+          <Drawer.Screen name="myClients" component={MyClients} options={{ title: "My Clients" }} />
+          <Drawer.Screen name="myProfile" component={MyProfile} options={{ title: "My Profile" }} />
 
-          <Drawer.Screen name="home" component={HomeScreen} />
+          <Drawer.Screen 
+            name="listAppointment" 
+            component={ListAppointmentScreen} 
+            options={({ navigation }) => ({
+              title: "List Appointment",
+              headerRight: () => (
+                <IconButton
+                  icon="plus"
+                  onPress={() => {
+                    // Abre un menú o ejecuta una acción
+                    navigation.navigate('appointment');
+                  }}
+                />
+              ),
+            })}
+          />
 
-          <Drawer.Screen name="settings" component={HomeScreen} />
-
-          <Drawer.Screen name="categories" component={Categories} />
-
-          <Drawer.Screen name="myClients" component={MyClients} />
-
-          <Drawer.Screen name="myProfile" component={MyProfile} />
-
-          <Drawer.Screen name="listAppointment" component={ListAppointmentScreen} />
-
-          <Drawer.Screen name="createBusiness" component={CreateBusiness} options={{ title: "Add your business" }} />
-
-          <Drawer.Screen name="myBusiness" component={MyBusiness} />
-
-          <Drawer.Screen name="searchBusiness" component={ListBusiness} />
-          <Drawer.Screen name="logOut" component={LogOut} />
+          <Drawer.Screen name="createBusiness" component={CreateBusiness} options={{ title: "Create your business" }} />
+          <Drawer.Screen name="myBusiness" component={MyBusiness} options={{ title: "my Business" }} />
+          <Drawer.Screen name="searchBusiness" component={ListBusiness} options={{ title: "Search Business" }} />
+          <Drawer.Screen name="logOut" component={LogOut} options={{ title: "Log Out" }} />
         </>
       ) : (
         <Drawer.Screen name="login" component={LoginScreen} />
