@@ -10,6 +10,7 @@ import { StoreRootState } from "../../store/store";
 import { AppointmentDataType, CategoryDataType } from "../types";
 import { Icons } from "../../components";
 import { Button, FAB, PaperProvider } from "react-native-paper";
+import SumaryAppointment from "../../components/modal/sumaryAppointment";
 
 const Dates = () => {
   const navigation = useNavigation();
@@ -201,6 +202,7 @@ const Dates = () => {
             navigation.navigate('appointment');
           }}
         />
+        <SumaryAppointment dateAppointmentSelected={dateAppointmentSelected} listAppointment={listAppointment} />
       </View>
     </PaperProvider>
   );

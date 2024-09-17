@@ -9,23 +9,31 @@ import CreateBusiness from "../screens/business/createBusiness";
 import ListBusiness from "../screens/business/listBusinessScreen";
 import Home1 from "../screens/appointment/listAppointmentScreen";
 import Home2 from "../screens/appointment/listAppointmentScreen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { StoreRootState } from "../store/store";
 import CustomDrawerContent from "./children.routes";
 import Categories from "../screens/appointment/categoriesScreeen";
 import MyBusiness from "../screens/business/myBusiness";
 import MyProfile from "../screens/user/myProfile";
 import MyClients from "../screens/business/myClients";
-import { IconButton } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { Avatar, Card, IconButton, Menu, Provider as PaperProvider } from "react-native-paper";
+import { modalViewSumaryAppointmentCreateCategoryVisibleAPIAction } from "../store/modals/actions";
+import { useNavigation } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
 export function DrawerRoutes() {
+  const dispatch = useDispatch<any>();
+  const navigation = useNavigation();
+  
   const loggedin = useSelector((state: StoreRootState) => state?.user?.loggedin ?? undefined);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
 
   const [exitsLogin, setExitsLogin] = React.useState<boolean>(false);
   const [exitsBussines, setExitsBussines] = React.useState<boolean>(false);
+
+  const [visibleMenuIndex, setVisibleMenuIndex] = React.useState<boolean>(false);
 
   const checkDataUser = () => {
     if (userData != undefined) {
@@ -57,7 +65,25 @@ export function DrawerRoutes() {
     }
   }, []);
 
+  const openMenu = () => {
+    setVisibleMenuIndex(true);
+  };
+
+  const closeMenu = () => {
+    setVisibleMenuIndex(false);
+  };
+
+  const createNewAppointment = () => {
+    setVisibleMenuIndex(false);
+    navigation.navigate('appointment');
+  }
+  const seeDailySummary = () => {
+    setVisibleMenuIndex(false);
+    dispatch(modalViewSumaryAppointmentCreateCategoryVisibleAPIAction(true));
+  }
+
   return (
+    <PaperProvider>
     <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />}>
       {exitsLogin ? (
         <>
@@ -74,13 +100,20 @@ export function DrawerRoutes() {
             options={({ navigation }) => ({
               title: "List Appointment",
               headerRight: () => (
-                <IconButton
-                  icon="plus"
-                  onPress={() => {
-                    // Abre un menú o ejecuta una acción
-                    navigation.navigate('appointment');
-                  }}
-                />
+                  <Menu
+                    visible={visibleMenuIndex}
+                    onDismiss={closeMenu}
+                    anchor={
+                      <IconButton
+                        icon="dots-vertical"
+                        onPress={() => openMenu()}
+                      />
+                    }
+                    style={{ marginTop: -40 }} // Ajuste de la posición vertical
+                  >
+                    <Menu.Item onPress={() => {createNewAppointment()}} title="Create new appointment" />
+                    <Menu.Item onPress={() => {seeDailySummary()}} title="See daily summary" />
+                  </Menu>
               ),
             })}
           />
@@ -94,5 +127,6 @@ export function DrawerRoutes() {
         <Drawer.Screen name="login" component={LoginScreen} />
       )}
     </Drawer.Navigator>
+    </PaperProvider>
   );
 }

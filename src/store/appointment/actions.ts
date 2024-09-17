@@ -15,7 +15,6 @@ export const resetPutAppointment = createAction(RESET_PUT_APPOINTMENT);
 //APOINTMENT
 export const getApointmentsWithFiltersAPIAction = createAsyncThunk(GET_APPOINTMENT_WITH_FILTERS, async ({business_appointment, date_selected}: {business_appointment: BusinessDataType, date_selected: any}) => {
   try {
-    console.log("-EXECUTE UPDATE-")
     // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
       const urlTimeAvailableAppointment = `${urlAppointment}/filters/`;
     const response = await axios.post(urlTimeAvailableAppointment, {
