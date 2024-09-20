@@ -107,13 +107,21 @@ export const formatTime = (dateInt: any) => {
   return horaFormateada;
 };
 
-export const getFullName = (client: UserDataType) => `${client?.first_name} ${client?.last_name}`;
+export const getFullName = (client: UserDataType) => {
+  if (client != undefined) {
+    return `${client?.first_name} ${client?.last_name}`;
+  }
+  return "";
+};
 
 export const getLabelName = (client: UserDataType) => {
-  if (client.first_name.indexOf(" ") === -1) {
-    return client.first_name[0] + client.last_name[0];
-  } else {
-    let array_name = client.first_name.split(" ");
-    return array_name.length === 2 ? array_name[0][0] + array_name[1][0] : client.first_name[0];
+  if (client != undefined) {
+    if (client.first_name.indexOf(" ") === -1) {
+      return client.first_name[0] + client.last_name[0];
+    } else {
+      let array_name = client.first_name.split(" ");
+      return array_name.length === 2 ? array_name[0][0] + array_name[1][0] : client.first_name[0];
+    }
   }
+  return "";
 };

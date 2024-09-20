@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, Card, IconButton, Menu, Provider as PaperProvider } from "react-native-paper";
-import { getMyClientsAPIAction } from "../../store/user/actions";
+import { getMyClientsAPIAction, setUserMyProfileAPIAction } from "../../store/user/actions";
 import { StoreRootState } from "../../store/store";
 import { UserDataType } from "../types";
 import { getFullName, getLabelName } from "../../components/utils";
+import { getApointmentsByUserAndBussinesAPIAction } from "../../store/appointment/actions";
 
 export default function MyClients({ navigation }: any) {
   const dispatch = useDispatch<any>();
@@ -36,15 +37,27 @@ export default function MyClients({ navigation }: any) {
 
   const selectedSubMenu = (clientSelected: UserDataType) => {
     setVisibleMenuIndex(null);
-    console.log("-clientSelected-")
-    console.log(clientSelected)
+  }
+  
+  const seeHistoryCliente = (clientSelected: UserDataType) => {
+    setVisibleMenuIndex(null);
+    dispatch(setUserMyProfileAPIAction(clientSelected));
+
+    dispatch(
+      getApointmentsByUserAndBussinesAPIAction({
+        user_appointment: clientSelected,
+        business_appointment: clientSelected?.my_business,
+      })
+    );
+
+    navigation.navigate('myProfile');
   }
 
   return (
     <PaperProvider>
       <View style={{ flex: 1, backgroundColor: "white" }}>
         {listMyClients?.map((client, index) => (
-          <Card key={index} style={styles.containerCard}>
+          <Card key={index} style={styles.containerCard} onPress={() => seeHistoryCliente(client)}>
             <Card.Title
               title={getFullName(client)}
               subtitle={client.email}
@@ -65,7 +78,7 @@ export default function MyClients({ navigation }: any) {
                   >
                     <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Añadir nueva cita" />
                     <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Consultar sus cita" />
-                    <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Ver historial" />
+                    <Menu.Item onPress={() => {seeHistoryCliente(client)}} title="Ver historial" />
                     <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Eliminar" />
                   </Menu>
                 </View>

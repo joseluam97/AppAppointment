@@ -47,6 +47,7 @@ export type UserDataType = {
   first_name: string;
   last_name: string;
   date_birth: Date;
+  address: string;
   email: string;
   password: string;
   list_business: BusinessDataType[];

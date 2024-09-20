@@ -3,6 +3,7 @@ import 'intl/locale-data/jsonp/mn-MN';
 
 import {DateTime} from 'luxon';
 import {constantValues} from '../constants';
+import { AppointmentDataType } from '../screens/types';
 
 export function CurrencyFormatter(
   currencyCode: string = 'MNT',
@@ -75,3 +76,19 @@ export function TimeFormatter(timeISOString: string = '') {
   // Formatea la hora en formato HH:mm
   return time.toFormat('HH:mm');
 }
+
+
+export const getTimeFinishAppointment = (start_date: Date, increment: number) => {
+  let end_date: Date = new Date(start_date);
+  end_date.setMinutes(end_date.getMinutes() + increment);
+
+  return TimeFormatter(end_date?.toISOString());
+};
+
+export const format_time_appointment = (appointment: AppointmentDataType) => {
+  let date_appointment: string = "";
+  if (appointment?.date_appointment != undefined) {
+    date_appointment = TimeFormatter(appointment.date_appointment).toString() + " - " + getTimeFinishAppointment(appointment.date_appointment, appointment?.type?.time).toString();
+  }
+  return date_appointment + " (" + appointment?.type?.time + " minutes)";
+};

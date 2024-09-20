@@ -1,6 +1,6 @@
 import { AppointmentDataType, SubCategoryDataType, CategoryDataType, TimeAvailableForAppointment } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
-import { modalCreateSubCategoryVisibleAPIAction, initialStateModalsAPIAction, modalCreateCategoryVisibleAPIAction, modalViewSumaryAppointmentCreateCategoryVisibleAPIAction} from "./actions";
+import { modalCreateSubCategoryVisibleAPIAction, initialStateModalsAPIAction, modalCreateCategoryVisibleAPIAction, modalViewSumaryAppointmentVisibleAPIAction, modalViewDetailsAppointmentVisibleAPIAction} from "./actions";
 
 type InitialStateType = {
   // MODAL CREATION CATEGORY
@@ -16,6 +16,11 @@ type InitialStateType = {
 
   // MODAL VIEW SUMARY APPOINTMENT
   modalViewSumaryAppointment: boolean;
+  
+  // MODAL VIEW DETAILS APPOINTMENT
+  modalViewDetailsAppointment: boolean;
+  modeViewDetailsAppointment: string;
+  appointmentSelected: AppointmentDataType | undefined;
 };
 
 const initialState: InitialStateType = {
@@ -32,6 +37,11 @@ const initialState: InitialStateType = {
   
   // MODAL VIEW SUMARY APPOINTMENT
   modalViewSumaryAppointment: false,
+
+  // MODAL VIEW DETAILS APPOINTMENT
+  modalViewDetailsAppointment: false,
+  modeViewDetailsAppointment: "",
+  appointmentSelected: undefined,
 
 };
 
@@ -54,10 +64,18 @@ export default createReducer(initialState, (builder) => {
         subCategorySelectModalSubCategory: {...action.payload.subCategory}
       };
     })
-    .addCase(modalViewSumaryAppointmentCreateCategoryVisibleAPIAction.fulfilled, (state, action) => {
+    .addCase(modalViewSumaryAppointmentVisibleAPIAction.fulfilled, (state, action) => {
       return {
         ...state,
         modalViewSumaryAppointment: action.payload.isVisible,
+      };
+    })
+    .addCase(modalViewDetailsAppointmentVisibleAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        modalViewDetailsAppointment: action.payload.isVisible,
+        modeViewDetailsAppointment: action.payload.mode,
+        appointmentSelected: {...action.payload.appointment},
       };
     })
     .addCase(initialStateModalsAPIAction, () => {

@@ -1,4 +1,4 @@
-import { LOGIN_USER, INIT_VALUE, LOG_OUT_USER, PUT_USER, GET_MY_CLIENTS } from "./types";
+import { LOGIN_USER, INIT_VALUE, LOG_OUT_USER, PUT_USER, GET_MY_CLIENTS, SET_USER_MY_PROFILE } from "./types";
 
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
@@ -67,3 +67,12 @@ export const getMyClientsAPIAction = createAsyncThunk(GET_MY_CLIENTS, async (idB
     throw error;
   }
 });
+
+
+// SET USER MY PROFILE
+export const setUserMyProfileAPIAction = createAsyncThunk(
+  SET_USER_MY_PROFILE,
+  async (userSelected: UserDataType) => {
+    return {userSelected};
+  }
+);

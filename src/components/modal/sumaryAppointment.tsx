@@ -5,7 +5,7 @@ import { Button, Dialog, Portal, PaperProvider, Text } from "react-native-paper"
 import { DateFormatter } from "../textFormatter";
 import { StoreRootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { modalViewSumaryAppointmentCreateCategoryVisibleAPIAction } from "../../store/modals/actions";
+import { modalViewSumaryAppointmentVisibleAPIAction } from "../../store/modals/actions";
 
 const SumaryAppointment = ({dateAppointmentSelected, listAppointment}) => {
   const dispatch = useDispatch<any>();
@@ -19,7 +19,7 @@ const SumaryAppointment = ({dateAppointmentSelected, listAppointment}) => {
   const modalViewSumaryAppointmentAPI = useSelector((state: StoreRootState) => state?.modals?.modalViewSumaryAppointment ?? undefined);
 
   const hideDialog = () => {
-    dispatch(modalViewSumaryAppointmentCreateCategoryVisibleAPIAction(false));
+    dispatch(modalViewSumaryAppointmentVisibleAPIAction(false));
   }
 
   useEffect(() => {

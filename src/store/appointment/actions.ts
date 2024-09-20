@@ -1,9 +1,9 @@
-import { RESET_PUT_APPOINTMENT, PUT_APPOINTMENT, GET_APPOINTMENT_WITH_FILTERS, POST_APPOINTMENT, GET_ALL_APPOINTMENT, GET_ALL_TYPES_APPOINTMENT, GET_ALL_BREED, GET_TYPES_APPOINTMENT_BY_BREED, GET_TIME_AVAILABLE_APPOINTMENT } from "./types";
+import { RESET_PUT_APPOINTMENT, PUT_APPOINTMENT, GET_APPOINTMENT_WITH_FILTERS, POST_APPOINTMENT, GET_ALL_APPOINTMENT, GET_ALL_TYPES_APPOINTMENT, GET_ALL_BREED, GET_TYPES_APPOINTMENT_BY_BREED, GET_TIME_AVAILABLE_APPOINTMENT, GET_APPOINTMENT_BY_USER_AND_BUSSINES } from "./types";
 
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppointmentDataType, BusinessDataType } from "../../screens/types";
+import { AppointmentDataType, BusinessDataType, UserDataType } from "../../screens/types";
 
 const urlCategory = "http://192.168.1.142:3100/category";
 const urlAppointment = "http://192.168.1.142:3100/appointment";
@@ -13,6 +13,25 @@ export const initialStateAPIAction = createAction("initialState/set");
 export const resetPutAppointment = createAction(RESET_PUT_APPOINTMENT);
 
 //APOINTMENT
+export const getApointmentsByUserAndBussinesAPIAction = createAsyncThunk(GET_APPOINTMENT_BY_USER_AND_BUSSINES, 
+  async ({business_appointment, user_appointment}: {business_appointment: BusinessDataType, user_appointment: UserDataType}) => {
+  try {
+    // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
+      const urlUserAndBussinesAppointment = `${urlAppointment}/byUser/`;
+    const response = await axios.post(urlUserAndBussinesAppointment, {
+      user_appointment: user_appointment._id,
+      business_appointment: business_appointment._id,
+    });
+
+    // Devuelve los datos del usuario si la solicitud es exitosa
+    return response.data;
+  } catch (error) {
+    // Maneja cualquier error que ocurra durante la solicitud
+    console.error("Error during login:", error);
+    throw error;
+  }
+});
+
 export const getApointmentsWithFiltersAPIAction = createAsyncThunk(GET_APPOINTMENT_WITH_FILTERS, async ({business_appointment, date_selected}: {business_appointment: BusinessDataType, date_selected: any}) => {
   try {
     // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
@@ -146,3 +165,4 @@ export const getAllCategoryAPIAction = createAsyncThunk(GET_ALL_BREED, async () 
     throw error;
   }
 });
+

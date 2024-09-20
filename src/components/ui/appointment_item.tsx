@@ -1,23 +1,28 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { DurationFormatter, TimeFormatter } from "../textFormatter";
+import { DateFormatter, DurationFormatter, TimeFormatter } from "../textFormatter";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AppointmentDataType, CategoryDataType } from "../../screens/types";
 import { putAppointmentAPIAction, resetPutAppointment } from "../../store/appointment/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreRootState } from "../../store/store";
 import { createToast } from "../utils";
-import { Button } from 'react-native-paper';
+import { Button } from "react-native-paper";
+import { modalViewDetailsAppointmentVisibleAPIAction } from "../../store/modals/actions";
 
-const AppointmentItem = ({ appointment, type, user, listCategory, valueOpenAll }) => {
+const AppointmentItem = ({ appointment, type, user, listCategory, valueOpenAll, enableActions = true }) => {
   const dispatch = useDispatch<any>();
   const [showDetails, setShowDetails] = useState(false);
-  
+
   const resultPutAppointment = useSelector((state: StoreRootState) => state?.appointment?.resultPut ?? undefined);
 
   const toggleDetails = () => {
-    setShowDetails(!showDetails);
+    if (enableActions == true) {
+      setShowDetails(!showDetails);
+    } else {
+      dispatch(modalViewDetailsAppointmentVisibleAPIAction({ isVisible: true, mode: "details", appointment: appointment }));
+    }
   };
 
   const formatIdCategoryToObject = (idCategory: string) => {
@@ -52,7 +57,7 @@ const AppointmentItem = ({ appointment, type, user, listCategory, valueOpenAll }
   };
 
   useEffect(() => {
-    console.log()
+    console.log();
   }, [appointment, resultPutAppointment]);
 
   useEffect(() => {
@@ -65,11 +70,11 @@ const AppointmentItem = ({ appointment, type, user, listCategory, valueOpenAll }
   }, [valueOpenAll]);
 
   const changeStateAppointment = () => {
-    updateAppointment(!appointment?.complete, appointment?.approved)
+    updateAppointment(!appointment?.complete, appointment?.approved);
   };
 
   const changeApprovedAppointment = () => {
-    updateAppointment(appointment?.complete, !appointment?.approved)
+    updateAppointment(appointment?.complete, !appointment?.approved);
   };
 
   const updateAppointment = (complete: boolean, approved: boolean) => {
@@ -103,24 +108,34 @@ const AppointmentItem = ({ appointment, type, user, listCategory, valueOpenAll }
         {showDetails && (
           <View style={styles.details}>
             <View style={styles.row}>
-              <MaterialIcons name="pets" size={20} color="#888" />
+              <MaterialIcons name="category" size={20} color="#888" />
               <Text style={styles.text}>
                 {" "}
-                {formatIdCategoryToObject(type?.category)?.name} ({formatIdCategoryToObject(type?.category)?.weight} Kg)
+                {formatIdCategoryToObject(type?.category)?.name} ({formatIdCategoryToObject(type?.category)?.description})
               </Text>
             </View>
+            {enableActions == false && (
+              <View style={styles.row}>
+                <MaterialIcons name="event" size={20} color="#888" />
+                <Text style={styles.text}> {DateFormatter(appointment?.date_appointment)}</Text>
+              </View>
+            )}
             <View style={styles.row}>
               <MaterialIcons name="schedule" size={20} color="#888" />
               <Text style={styles.text}> {format_time_appointment(appointment)}</Text>
             </View>
-            <View style={styles.row}>
-              <MaterialIcons name="euro" size={20} color="#888" />
-              <Text style={styles.text}> {type?.price} €</Text>
-            </View>
-            <View style={styles.row}>
-              <MaterialIcons name="description" size={20} color="#888" />
-              <Text style={styles.text}> {appointment?.description}</Text>
-            </View>
+            {enableActions == true && (
+              <View style={styles.row}>
+                <MaterialIcons name="euro" size={20} color="#888" />
+                <Text style={styles.text}> {type?.price} €</Text>
+              </View>
+            )}
+            {enableActions == true && (
+              <View style={styles.row}>
+                <MaterialIcons name="description" size={20} color="#888" />
+                <Text style={styles.text}> {appointment?.description}</Text>
+              </View>
+            )}
           </View>
         )}
       </TouchableOpacity>
@@ -131,22 +146,43 @@ const AppointmentItem = ({ appointment, type, user, listCategory, valueOpenAll }
             {" "}
             {user?.first_name} {user?.last_name}
           </Text>
-          <MaterialIcons name={showDetails ? "keyboard-arrow-up" : "keyboard-arrow-down"} size={24} color="#888" />
+          {enableActions == true && <MaterialIcons name={showDetails ? "keyboard-arrow-up" : "keyboard-arrow-down"} size={24} color="#888" />}
         </View>
 
-        <View style={styles.listActions}>
-        {appointment.complete == true && <Button style={styles.buttonStyle} buttonColor="red" textColor="white" icon="check" mode="contained-tonal" onPress={changeStateAppointment}>
-            Mark As Pending
-          </Button>}
+        {enableActions == false && (
+          <View style={styles.detailsRight}>
+            <View style={styles.row}>
+              <MaterialIcons name="euro" size={20} color="#888" />
+              <Text style={styles.text}> {type?.price} €</Text>
+            </View>
+            <View style={styles.row}>
+              <MaterialIcons name="description" size={20} color="#888" />
+              <Text style={styles.text}> {appointment?.description}</Text>
+            </View>
+          </View>
+        )}
 
-          {appointment.complete == false && <Button style={styles.buttonStyle} buttonColor="green" textColor="white" icon="check" mode="contained-tonal" onPress={changeStateAppointment}>
-            Mark As Completed
-          </Button>}
+        {enableActions == true && (
+          <View style={styles.listActions}>
+            {appointment.complete == true && (
+              <Button style={styles.buttonStyle} buttonColor="red" textColor="white" icon="check" mode="contained-tonal" onPress={changeStateAppointment}>
+                Mark As Pending
+              </Button>
+            )}
 
-          {appointment.approved == false && <Button style={styles.buttonStyle} buttonColor="blue" textColor="white" icon="check" mode="contained-tonal" onPress={changeApprovedAppointment}>
-            Approved
-          </Button>}
-        </View>
+            {appointment.complete == false && (
+              <Button style={styles.buttonStyle} buttonColor="green" textColor="white" icon="check" mode="contained-tonal" onPress={changeStateAppointment}>
+                Mark As Completed
+              </Button>
+            )}
+
+            {appointment.approved == false && (
+              <Button style={styles.buttonStyle} buttonColor="blue" textColor="white" icon="check" mode="contained-tonal" onPress={changeApprovedAppointment}>
+                Approved
+              </Button>
+            )}
+          </View>
+        )}
       </TouchableOpacity>
     </>
   );
@@ -176,6 +212,9 @@ const styles = StyleSheet.create({
   details: {
     marginTop: 5,
   },
+  detailsRight: {
+    marginTop: 15,
+  },
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -193,7 +232,7 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     margin: "1%",
-    width: "70%"
+    width: "70%",
   },
 });
 

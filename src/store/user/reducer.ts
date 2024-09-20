@@ -5,7 +5,8 @@ import {
   initValue,
   logUserAPIAction,
   putUserAPIAction,
-  getMyClientsAPIAction
+  getMyClientsAPIAction,
+  setUserMyProfileAPIAction
 } from "./actions";
 
 type InitialStateType = {
@@ -13,13 +14,20 @@ type InitialStateType = {
   userData: UserDataType | undefined;
   resultPut: boolean | undefined;
   listMyClients: UserDataType[] | undefined;
+
+  // View my profile
+  userSelected: UserDataType | undefined;
+
 };
 
 const initialState: InitialStateType = {
   loggedin: undefined,
   userData: undefined,
   resultPut: undefined,
-  listMyClients: []
+  listMyClients: [],
+  
+  // View my profile
+  userSelected: undefined,
 };
 
 export default createReducer(initialState, (builder) => {
@@ -71,6 +79,12 @@ export default createReducer(initialState, (builder) => {
         ...state,
         loggedin: false,
         userData: undefined,
+      };
+    })
+    .addCase(setUserMyProfileAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        userSelected: { ...action.payload.userSelected },
       };
     })
     /*.addCase(userLogout, () => {

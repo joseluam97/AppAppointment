@@ -9,7 +9,8 @@ import {
   postAppointmentAPIAction,
   getApointmentsWithFiltersAPIAction,
   putAppointmentAPIAction,
-  resetPutAppointment
+  resetPutAppointment,
+  getApointmentsByUserAndBussinesAPIAction
 } from "./actions";
 
 type InitialStateType = {
@@ -17,6 +18,7 @@ type InitialStateType = {
   resultPut: boolean;
   loggedin: boolean;
   listAppointmentAPI: AppointmentDataType[] | undefined;
+  listAppointmentByUserAPI: AppointmentDataType[] | undefined;
   listSubCategoryAPI: SubCategoryDataType[] | undefined;
   listCategoryAPI: CategoryDataType[] | undefined;
   listTimeAppointmentAvailable: TimeAvailableForAppointment[] | undefined;
@@ -29,7 +31,8 @@ const initialState: InitialStateType = {
   listAppointmentAPI: [],
   listSubCategoryAPI: [],
   listCategoryAPI: [],
-  listTimeAppointmentAvailable: []
+  listTimeAppointmentAvailable: [],
+  listAppointmentByUserAPI: [],
 };
 
 export default createReducer(initialState, (builder) => {
@@ -92,6 +95,13 @@ export default createReducer(initialState, (builder) => {
         ...state,
         loggedin: true,
         listCategoryAPI: { ...action.payload },
+      };
+    })
+    .addCase(getApointmentsByUserAndBussinesAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        loggedin: true,
+        listAppointmentByUserAPI: { ...action.payload },
       };
     })
     /*.addCase(userLogout, () => {
