@@ -38,6 +38,10 @@ export default function MyClients({ navigation }: any) {
   const selectedSubMenu = (clientSelected: UserDataType) => {
     setVisibleMenuIndex(null);
   }
+
+  const addNewAppointment = (clientSelected: UserDataType) => {
+    navigation.navigate("appointment", { fromRouter: 'MyClients', userRouter: clientSelected});
+  }
   
   const seeHistoryCliente = (clientSelected: UserDataType) => {
     setVisibleMenuIndex(null);
@@ -76,10 +80,10 @@ export default function MyClients({ navigation }: any) {
                     }
                     style={{ marginTop: -40 }} // Ajuste de la posición vertical
                   >
-                    <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Añadir nueva cita" />
-                    <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Consultar sus cita" />
+                    <Menu.Item onPress={() => {addNewAppointment(client)}} title="Add new appointment" />
+                    <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Check your next appointment" />
                     <Menu.Item onPress={() => {seeHistoryCliente(client)}} title="Ver historial" />
-                    <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Eliminar" />
+                    <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Delete client" />
                   </Menu>
                 </View>
               )}

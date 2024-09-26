@@ -199,7 +199,7 @@ const Dates = () => {
           style={styles.fab}
           icon="plus"
           onPress={() => {
-            navigation.navigate('appointment');
+            navigation.navigate("appointment", { fromRouter: 'ListAppointment' });
           }}
         />
         <SumaryAppointment dateAppointmentSelected={dateAppointmentSelected} listAppointment={listAppointment} />
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     margin: 16,
     right: 10,
-    bottom: 10,
+    bottom: 100,
   },
 });
 

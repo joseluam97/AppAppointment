@@ -30,8 +30,12 @@ import DatePicker from "../../components/ui/datepicker";
 import { formatTime, getFullName } from "../../components/utils";
 import { getAllBusinessAPIAction } from "../../store/business/actions";
 import { getMyClientsAPIAction } from "../../store/user/actions";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function Dates({ navigation }: any): JSX.Element {
+export default function Dates({ navigation, route }: any): JSX.Element {
+  const { fromRouter } = route.params || {};
+  const { userRouter } = route.params || {};
+
   const dispatch = useDispatch<any>();
   const isFocused = useIsFocused();
 
@@ -58,6 +62,7 @@ export default function Dates({ navigation }: any): JSX.Element {
   // List Clients
   const [listMyClients, setListMyClients] = useState<UserDataType[]>();
   const [clientSelected, setClientSelected] = useState<UserDataType>();
+  const [clientBlocked, setClientBlocked] = useState<boolean>(false);
 
   // List Bussiness
   const [listBusiness, setListBusiness] = useState<BusinessDataType[]>();
@@ -102,7 +107,6 @@ export default function Dates({ navigation }: any): JSX.Element {
 
         // Redit to list appointment
         navigation.navigate("listAppointment");
-
       } else if (exitsBussines == false) {
         dispatch(
           postAppointmentAPIAction({
@@ -157,6 +161,18 @@ export default function Dates({ navigation }: any): JSX.Element {
 
       // Check user
       checkDataUser();
+
+      // Get from previous tab
+      if (fromRouter) {
+        if (fromRouter == "MyClients") {
+          setClientBlocked(true);
+          setClientSelected(userRouter._id);
+        } else {
+          setClientBlocked(false);
+        }
+      } else {
+        setClientBlocked(false);
+      }
     }
   }, [isFocused]);
 
@@ -257,6 +273,7 @@ export default function Dates({ navigation }: any): JSX.Element {
             options={listMyClients != undefined ? listMyClients : []}
             getValue={(option) => option?._id?.toString()}
             getLabel={(option) => getFullName(option)}
+            editable={!clientBlocked}
           />
         ) : null}
 
