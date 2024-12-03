@@ -36,6 +36,7 @@ export default function Login({ navigation }: any): JSX.Element {
   useEffect(() => {
     if (isFocused) {
       // "jl" "jl2"
+
       dispatch(loginUserAPIAction({ email: "joseluastorga97@gmail.com", password: "1234" }));
       // dispatch(loginUserAPIAction({ email: "angelbenitez1997@gmail.com", password: "1234" }));
     }
