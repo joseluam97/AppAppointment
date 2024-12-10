@@ -4,8 +4,9 @@ import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppointmentDataType, BusinessDataType, SubCategoryDataType } from "../../screens/types";
+import { URL_API } from "../../constants/constant";
 
-const urlSubCategory = "http://192.168.1.142:3100/subCategory";
+const urlSubCategory = URL_API + "/subCategory";
 
 export const initialStateSubCategoryAPIAction = createAction(INIT_VALUE_SUB_CATEGORY);
 

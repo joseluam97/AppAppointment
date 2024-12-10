@@ -5,8 +5,10 @@ import { Avatar, Card, IconButton, Menu, Provider as PaperProvider } from "react
 import { getMyClientsAPIAction, setUserMyProfileAPIAction } from "../../store/user/actions";
 import { StoreRootState } from "../../store/store";
 import { UserDataType } from "../types";
-import { getFullName, getLabelName } from "../../components/utils";
-import { getApointmentsByUserAndBussinesAPIAction } from "../../store/appointment/actions";
+import { createToast, getFullName, getLabelName } from "../../components/utils";
+import { getApointmentsByUserAndBussinesAPIAction, getNextApointmentsByUserAndBussinesAPIAction } from "../../store/appointment/actions";
+import { modalViewDetailsAppointmentVisibleAPIAction } from "../../store/modals/actions";
+import DetailsAppointment from "../../components/modal/detailsAppointment";
 
 export default function MyClients({ navigation }: any) {
   const dispatch = useDispatch<any>();
@@ -15,6 +17,7 @@ export default function MyClients({ navigation }: any) {
 
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
   const listMyClientsAPI = useSelector((state: StoreRootState) => state?.user?.listMyClients ?? undefined);
+  const nextAppointmentByUser = useSelector((state: StoreRootState) => state?.appointment?.nextAppointmentByUserAPI ?? undefined);
 
   useEffect(() => {
     dispatch(getMyClientsAPIAction(userData?.my_business?._id));
@@ -57,6 +60,32 @@ export default function MyClients({ navigation }: any) {
     navigation.navigate('myProfile');
   }
 
+  const seeNextAppointment = (clientSelected: UserDataType) => {
+    setVisibleMenuIndex(null);
+    dispatch(
+      getNextApointmentsByUserAndBussinesAPIAction({
+      user_appointment: clientSelected,
+      business_appointment: userData?.my_business._id,
+      })
+    );
+  }
+
+  useEffect(() => {
+    if (nextAppointmentByUser != undefined) {
+      console.log("-nextAppointmentByUser-")
+      console.log(nextAppointmentByUser._id)
+
+      if(nextAppointmentByUser._id != undefined){
+        dispatch(modalViewDetailsAppointmentVisibleAPIAction(
+          { isVisible: true, mode: "details", appointment: nextAppointmentByUser }
+        ));
+      }
+      else{
+        createToast("No upcoming appointments found.");
+      }
+    }
+  }, [nextAppointmentByUser]);
+
   return (
     <PaperProvider>
       <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -81,7 +110,7 @@ export default function MyClients({ navigation }: any) {
                     style={{ marginTop: -40 }} // Ajuste de la posición vertical
                   >
                     <Menu.Item onPress={() => {addNewAppointment(client)}} title="Add new appointment" />
-                    <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Check your next appointment" />
+                    <Menu.Item onPress={() => {seeNextAppointment(client)}} title="Check your next appointment" />
                     <Menu.Item onPress={() => {seeHistoryCliente(client)}} title="Ver historial" />
                     <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Delete client" />
                   </Menu>
@@ -90,6 +119,7 @@ export default function MyClients({ navigation }: any) {
             />
           </Card>
         ))}
+        <DetailsAppointment />
       </View>
     </PaperProvider>
   );

@@ -12,7 +12,7 @@ import { Icons } from "../../components";
 import { Button, FAB, PaperProvider } from "react-native-paper";
 import SumaryAppointment from "../../components/modal/sumaryAppointment";
 
-const Dates = () => {
+const ListAppointment = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<any>();
   const isFocused = useIsFocused();
@@ -269,4 +269,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dates;
+export default ListAppointment;

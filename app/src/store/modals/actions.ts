@@ -1,4 +1,4 @@
-import { INIT_VALUE_MODALS, MODAL_CREATE_SUB_CATEGORY, MODAL_CREATE_CATEGORY, MODAL_VIEW_APPOINTMENT, MODAL_VIEW_DETAILS_APPOINTMENT } from "./types";
+import { INIT_VALUE_MODALS, MODAL_CREATE_SUB_CATEGORY, MODAL_CREATE_CATEGORY, MODAL_VIEW_SUMARY_APPOINTMENT, MODAL_VIEW_DETAILS_APPOINTMENT } from "./types";
 
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
@@ -21,7 +21,7 @@ export const modalCreateCategoryVisibleAPIAction = createAsyncThunk(
   }
 );
 
-export const modalViewSumaryAppointmentVisibleAPIAction = createAsyncThunk(MODAL_VIEW_APPOINTMENT, async (isVisible: boolean) => {
+export const modalViewSumaryAppointmentVisibleAPIAction = createAsyncThunk(MODAL_VIEW_SUMARY_APPOINTMENT, async (isVisible: boolean) => {
   return { isVisible };
 });
 

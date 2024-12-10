@@ -1,0 +1,2 @@
+docker build -t api_appointment . --debug
+docker run -itd -p 80:3000 --name ApiAppointment api_appointment

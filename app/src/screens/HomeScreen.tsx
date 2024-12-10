@@ -38,6 +38,15 @@ export default function HomeScreen({ navigation }: any) {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
+      {userData?.first_name != null ?
+      <>
+      <Text> Inicio de Sesion de:</Text>
+      <Text> Nombre: {userData?.first_name} {userData?.last_name}</Text>
+      <Text> Email: {userData?.email}</Text>
+      </> :
+      <Text>
+        Inicio de sesion no realizado
+      </Text>}
       <Button title="List Appointment" onPress={navToListAppointment} />
       <Button title="Go Add Appointment" onPress={navToAddAppointment} />
       <StatusBar style="auto" />

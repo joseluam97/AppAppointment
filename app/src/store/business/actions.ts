@@ -4,8 +4,9 @@ import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { BusinessDataType } from "../../screens/types";
+import { URL_API } from "../../constants/constant";
 
-const urlBusiness = "http://192.168.1.142:3100/business";
+const urlBusiness = URL_API + "/business";
 
 // SER INIT VALUE 
 export const initValueBusiness = createAction(INIT_VALUE_BUSINESS);

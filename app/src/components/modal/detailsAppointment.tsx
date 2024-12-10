@@ -69,7 +69,7 @@ const DetailsAppointment = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "60%",
+    width: "80%",
     alignSelf: "center",
     padding: 10,
   },

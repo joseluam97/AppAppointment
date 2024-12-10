@@ -4,8 +4,9 @@ import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppointmentDataType, UserDataType } from "../../screens/types";
+import { URL_API } from "../../constants/constant";
 
-const urlUser = "http://192.168.1.142:3100/user";
+const urlUser = URL_API + "/user";
 
 export const initialStateAPIAction = createAction("initialState/set");
 

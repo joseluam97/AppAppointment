@@ -1,18 +1,49 @@
-import { RESET_PUT_APPOINTMENT, PUT_APPOINTMENT, GET_APPOINTMENT_WITH_FILTERS, POST_APPOINTMENT, GET_ALL_APPOINTMENT, GET_ALL_TYPES_APPOINTMENT, GET_ALL_BREED, GET_TYPES_APPOINTMENT_BY_BREED, GET_TIME_AVAILABLE_APPOINTMENT, GET_APPOINTMENT_BY_USER_AND_BUSSINES } from "./types";
+import { RESET_PUT_APPOINTMENT, PUT_APPOINTMENT, GET_APPOINTMENT_WITH_FILTERS, POST_APPOINTMENT, GET_ALL_APPOINTMENT, GET_ALL_TYPES_APPOINTMENT, GET_ALL_BREED, GET_TYPES_APPOINTMENT_BY_BREED, GET_TIME_AVAILABLE_APPOINTMENT, GET_APPOINTMENT_BY_USER_AND_BUSSINES, GET_NEXT_APPOINTMENT_BY_USER_AND_BUSSINES } from "./types";
 
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppointmentDataType, BusinessDataType, UserDataType } from "../../screens/types";
+import { URL_API } from "../../constants/constant";
 
-const urlCategory = "http://192.168.1.142:3100/category";
-const urlAppointment = "http://192.168.1.142:3100/appointment";
-const urlSubCategory = "http://192.168.1.142:3100/subCategory";
+const urlCategory = URL_API + "/category";
+const urlAppointment = URL_API + "/appointment";
+const urlSubCategory = URL_API + "/subCategory";
 
 export const initialStateAPIAction = createAction("initialState/set");
 export const resetPutAppointment = createAction(RESET_PUT_APPOINTMENT);
 
 //APOINTMENT
+export const getNextApointmentsByUserAndBussinesAPIAction = createAsyncThunk(GET_NEXT_APPOINTMENT_BY_USER_AND_BUSSINES, 
+  async ({business_appointment, user_appointment}: {business_appointment: BusinessDataType, user_appointment: UserDataType}) => {
+  try {
+
+    // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
+      const urlUserAndBussinesAppointment = `${urlAppointment}/nextByUser/`;
+    const response = await axios.post(urlUserAndBussinesAppointment, {
+      user_appointment: user_appointment._id,
+      business_appointment: business_appointment,
+    });
+
+    // Devuelve los datos del usuario si la solicitud es exitosa
+    console.log("-response.data-")
+    console.log(response.data)
+    console.log("-response.data-")
+    console.log(response.data.length)
+    console.log("-length-")
+
+    if(response.data.length >= 1){
+      return response.data[0];
+    }
+
+    return response.data;
+  } catch (error) {
+    // Maneja cualquier error que ocurra durante la solicitud
+    console.error("Error during login:", error);
+    throw error;
+  }
+});
+
 export const getApointmentsByUserAndBussinesAPIAction = createAsyncThunk(GET_APPOINTMENT_BY_USER_AND_BUSSINES, 
   async ({business_appointment, user_appointment}: {business_appointment: BusinessDataType, user_appointment: UserDataType}) => {
   try {
