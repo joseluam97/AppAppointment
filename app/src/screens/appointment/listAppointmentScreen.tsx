@@ -11,6 +11,11 @@ import { AppointmentDataType, CategoryDataType } from "../types";
 import { Icons } from "../../components";
 import { Button, FAB, PaperProvider } from "react-native-paper";
 import SumaryAppointment from "../../components/modal/sumaryAppointment";
+import { URL_API } from "../../constants/constant";
+import io from 'socket.io-client';
+import { EVENT_DELETE_APPOINTMENT, EVENT_POST_APPOINTMENT, EVENT_PUT_APPOINTMENT } from "../../constants/list_events";
+
+const socket = io(URL_API);
 
 const ListAppointment = () => {
   const navigation = useNavigation();
@@ -37,16 +42,45 @@ const ListAppointment = () => {
   }, []);
 
   useEffect(() => {
+    // Suscribirse al evento de actualización de la base de datos
+    socket.on(EVENT_POST_APPOINTMENT, (appointment) => {
+        console.log('New post appointment:', appointment);
+        getAppointmentToDisplay();
+    });
+
+    socket.on(EVENT_PUT_APPOINTMENT, (appointment) => {
+        console.log('New put appointment:', appointment);
+        getAppointmentToDisplay();
+    });
+    
+    socket.on(EVENT_DELETE_APPOINTMENT, (appointment) => {
+      console.log('New delete appointment:', appointment);
+      getAppointmentToDisplay();
+  });
+
+    // Limpiar listeners al desmontar
+    return () => {
+        socket.off(EVENT_POST_APPOINTMENT);
+        socket.off(EVENT_PUT_APPOINTMENT);
+        socket.off(EVENT_DELETE_APPOINTMENT);
+    };
+}, []);
+
+  useEffect(() => {
     if (isFocused) {
-      dispatch(
-        getApointmentsWithFiltersAPIAction({
-          business_appointment: userData?.my_business,
-          date_selected: new Date().toISOString(),
-        })
-      );
-      setDateAppointmentSelected(new Date());
+      getAppointmentToDisplay();
     }
   }, [isFocused]);
+
+  const getAppointmentToDisplay  = () => {
+    dispatch(
+      getApointmentsWithFiltersAPIAction({
+        business_appointment: userData?.my_business,
+        date_selected: new Date().toISOString(),
+      })
+    );
+    setDateAppointmentSelected(new Date());
+  };
 
   useEffect(() => {
     if (resultPutAppointment == true) {
@@ -137,19 +171,21 @@ const ListAppointment = () => {
     <PaperProvider>
       <View style={styles.container}>
         <View style={styles.buttonRow}>
-          <View style={styles.buttonContainer}>
-            <Button mode="contained" onPress={expandAllAppointment}>
+          <View style={styles.buttonContainer1}>
+            <Button mode="outlined" onPress={expandAllAppointment}>
               {openAll ? "CONTRACT ALL" : "EXPAND ALL"}
             </Button>
           </View>
-          <View style={styles.buttonContainer}>
-            <Button mode="contained" onPress={filterByCompleteOrNot}>
-              {seeAppointmentByFilters ? "SEE ALL" : "SEE UNCOMPLETES ONES"}
+          </View>
+          <View style={styles.buttonRow}>
+          <View style={styles.buttonContainer2}>
+            <Button mode="outlined" onPress={filterByCompleteOrNot}>
+              Completed: {seeAppointmentByFilters ? "YES" : "NO"}
             </Button>
           </View>
-          <View style={styles.buttonContainer}>
-            <Button mode="contained" onPress={filterByPendingApproved}>
-              {seeAppointmentByPendingApproved ? "SEE ALL" : "SEE PENDING APPROVAL"}
+          <View style={styles.buttonContainer2}>
+            <Button mode="outlined" onPress={filterByPendingApproved}>
+              Approved: {seeAppointmentByPendingApproved ? "YES" : "NO"}
             </Button>
 
           </View>
@@ -177,6 +213,8 @@ const ListAppointment = () => {
             </View>
           </FormProvider>
         </View>
+
+        <Text>Total appointment: {listAppointment?.length}</Text>
 
         {listAppointment?.length != 0 ? (
           <FlatList
@@ -218,8 +256,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 10,
   },
-  buttonContainer: {
-    flex: 0.33,
+  buttonContainer1: {
+    flex: 1,
+  },
+  buttonContainer2: {
+    flex: 0.5,
   },
   centeredContainer: {
     alignItems: "center",
