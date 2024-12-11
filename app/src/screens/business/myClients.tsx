@@ -72,9 +72,6 @@ export default function MyClients({ navigation }: any) {
 
   useEffect(() => {
     if (nextAppointmentByUser != undefined) {
-      console.log("-nextAppointmentByUser-")
-      console.log(nextAppointmentByUser._id)
-
       if(nextAppointmentByUser._id != undefined){
         dispatch(modalViewDetailsAppointmentVisibleAPIAction(
           { isVisible: true, mode: "details", appointment: nextAppointmentByUser }

@@ -40,7 +40,7 @@ const CreateSubCategory = () => {
     if (modeModalSubCategoryAPI == "new") {
       clearForm();
     }
-    if (modeModalSubCategoryAPI == "edit") {
+    if (modeModalSubCategoryAPI == "show" || modeModalSubCategoryAPI == "edit") {
       setTitleSubCategory(subCategorySelectModalSubCategoryAPI?.title);
       setPriceSubCategory(subCategorySelectModalSubCategoryAPI?.price.toString());
       setTimeSubCategory(subCategorySelectModalSubCategoryAPI?.time.toString());
@@ -102,7 +102,7 @@ const CreateSubCategory = () => {
                   value={titleSubCategory}
                   name="title"
                   label="Title"
-                  //rules={{ required: "Enter name please!" }}
+                  readOnly={modeModalSubCategoryAPI == "show" ? true : false}
                   onChangeText={(value) => setTitleSubCategory(value)}
                 />
 
@@ -110,9 +110,10 @@ const CreateSubCategory = () => {
                   value={priceSubCategory}
                   name="price"
                   label="Price"
-                  //rules={{ required: "Enter phone please!" }}
+                  readOnly={modeModalSubCategoryAPI == "show" ? true : false}
                   keyboardType="phone-pad"
                   maxLength={5}
+                  
                   onChangeText={(value) => setPriceSubCategory(value)}
                 />
 
@@ -120,7 +121,7 @@ const CreateSubCategory = () => {
                   value={timeSubCategory}
                   name="time"
                   label="Indicates appointment time (in minutes)"
-                  //rules={{ required: "Enter phone please!" }}
+                  readOnly={modeModalSubCategoryAPI == "show" ? true : false}
                   keyboardType="phone-pad"
                   maxLength={5}
                   onChangeText={(value) => setTimeSubCategory(value)}
@@ -131,12 +132,13 @@ const CreateSubCategory = () => {
 
             <View style={styles.listButton}>
               <Pressable style={[styles.button, styles.buttonClose]} onPress={closeModal}>
-                <Text style={styles.textStyle}>Cancel</Text>
+                <Text style={styles.textStyle}>Close</Text>
               </Pressable>
 
+              {modeModalSubCategoryAPI != "show" ?
               <Pressable style={[styles.button, styles.buttonSave]} onPress={createSubCategory}>
                 <Text style={styles.textStyle}>{modeModalSubCategoryAPI == "new" ? "Save" : "Edit"}</Text>
-              </Pressable>
+              </Pressable> : undefined}
             </View>
           </View>
         </View>

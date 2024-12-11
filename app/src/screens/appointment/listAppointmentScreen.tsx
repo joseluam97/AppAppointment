@@ -44,27 +44,27 @@ const ListAppointment = () => {
   useEffect(() => {
     // Suscribirse al evento de actualización de la base de datos
     socket.on(EVENT_POST_APPOINTMENT, (appointment) => {
-        console.log('New post appointment:', appointment);
-        getAppointmentToDisplay();
+      console.log('New post appointment:', appointment);
+      getAppointmentToDisplay();
     });
 
     socket.on(EVENT_PUT_APPOINTMENT, (appointment) => {
-        console.log('New put appointment:', appointment);
-        getAppointmentToDisplay();
+      console.log('New put appointment:', appointment);
+      getAppointmentToDisplay();
     });
-    
+
     socket.on(EVENT_DELETE_APPOINTMENT, (appointment) => {
       console.log('New delete appointment:', appointment);
       getAppointmentToDisplay();
-  });
+    });
 
     // Limpiar listeners al desmontar
     return () => {
-        socket.off(EVENT_POST_APPOINTMENT);
-        socket.off(EVENT_PUT_APPOINTMENT);
-        socket.off(EVENT_DELETE_APPOINTMENT);
+      socket.off(EVENT_POST_APPOINTMENT);
+      socket.off(EVENT_PUT_APPOINTMENT);
+      socket.off(EVENT_DELETE_APPOINTMENT);
     };
-}, []);
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
@@ -72,7 +72,7 @@ const ListAppointment = () => {
     }
   }, [isFocused]);
 
-  const getAppointmentToDisplay  = () => {
+  const getAppointmentToDisplay = () => {
     dispatch(
       getApointmentsWithFiltersAPIAction({
         business_appointment: userData?.my_business,
@@ -176,8 +176,8 @@ const ListAppointment = () => {
               {openAll ? "CONTRACT ALL" : "EXPAND ALL"}
             </Button>
           </View>
-          </View>
-          <View style={styles.buttonRow}>
+        </View>
+        <View style={styles.buttonRow}>
           <View style={styles.buttonContainer2}>
             <Button mode="outlined" onPress={filterByCompleteOrNot}>
               Completed: {seeAppointmentByFilters ? "YES" : "NO"}
@@ -214,34 +214,35 @@ const ListAppointment = () => {
           </FormProvider>
         </View>
 
-        <Text>Total appointment: {listAppointment?.length}</Text>
+        {listAppointment?.length != 0 ?
+          <Text>Total appointment: {listAppointment?.length}</Text> : undefined}
 
-        {listAppointment?.length != 0 ? (
-          <FlatList
-            data={listAppointment}
-            renderItem={({ item }) => (
-              <View style={styles.appointmentItemContainer}>
-                <AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={openAll} />
+            {listAppointment?.length != 0 ? (
+              <FlatList
+                data={listAppointment}
+                renderItem={({ item }) => (
+                  <View style={styles.appointmentItemContainer}>
+                    <AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={openAll} />
+                  </View>
+                )}
+                keyExtractor={(item) => item._id}
+                contentContainerStyle={styles.flatListContent}
+              />
+            ) : (
+              <View style={styles.containerWarning}>
+                <Text>No appointments were found for this day.</Text>
               </View>
             )}
-            keyExtractor={(item) => item._id}
-            contentContainerStyle={styles.flatListContent}
-          />
-        ) : (
-          <View style={styles.containerWarning}>
-            <Text>No appointments were found for this day.</Text>
-          </View>
-        )}
 
-        <FAB
-          style={styles.fab}
-          icon="plus"
-          onPress={() => {
-            navigation.navigate("appointment", { fromRouter: 'ListAppointment' });
-          }}
-        />
-        <SumaryAppointment dateAppointmentSelected={dateAppointmentSelected} listAppointment={listAppointment} />
-      </View>
+            <FAB
+              style={styles.fab}
+              icon="plus"
+              onPress={() => {
+                navigation.navigate("appointment", { fromRouter: 'ListAppointment' });
+              }}
+            />
+            <SumaryAppointment dateAppointmentSelected={dateAppointmentSelected} listAppointment={listAppointment} />
+          </View>
     </PaperProvider>
   );
 };

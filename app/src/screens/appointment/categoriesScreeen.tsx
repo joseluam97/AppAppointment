@@ -30,7 +30,7 @@ export default function Categories({ navigation }: any) {
   useEffect(() => {
     if (isFocused) {
       dispatch(getCategoryByBusinessAPIAction(userData?.my_business?._id));
-      console.log("-EXECUTION useEffect isFocused-")
+
       dispatch(initialStateModalsAPIAction());
     }
   }, [isFocused]);

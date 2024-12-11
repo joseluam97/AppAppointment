@@ -8,35 +8,62 @@ import theme from "../../constants/theme";
 import CreateSubCategory from "../modal/createSubCategory";
 import { modalCreateSubCategoryVisibleAPIAction } from "../../store/modals/actions";
 import { useDispatch, useSelector } from "react-redux";
+import { Avatar, Card, IconButton, Menu, Provider as PaperProvider } from "react-native-paper";
 
 const SubCategoryItem = ({ category, subCategory }) => {
   const dispatch = useDispatch<any>();
 
   const [showDetails, setShowDetails] = useState(false);
 
+  const showSubCategory = () => {
+    dispatch(modalCreateSubCategoryVisibleAPIAction({ isVisible: true, mode: "show", category: category, subCategory: subCategory }))
+  };
+
   const editSubCategory = () => {
-    console.log("-EXECUTION editSubCategory-")
-    dispatch(modalCreateSubCategoryVisibleAPIAction({isVisible: true, mode: "edit", category: category, subCategory: subCategory}))
+    dispatch(modalCreateSubCategoryVisibleAPIAction({ isVisible: true, mode: "edit", category: category, subCategory: subCategory }))
   };
 
   const deleteSubCategory = () => {
 
   };
 
+  const [visibleMenuIndex, setVisibleMenuIndex] = useState<number | null>(null);
+  const openMenu = (index: number) => {
+    setVisibleMenuIndex(index);
+  };
+
+  const closeMenu = () => {
+    setVisibleMenuIndex(null);
+  };
+
+
   return (
     <>
       <View style={styles.subCategoryItemContainer}>
-        <View style={styles.contentSubCategory}>
+        <TouchableOpacity style={styles.contentSubCategory} onPress={showSubCategory}>
           <View style={styles.header}>
             <Text style={styles.text}>{subCategory?.title}</Text>
             <Text style={styles.text}>{subCategory?.price} €</Text>
-            <Text style={styles.text}>{subCategory?.time} minutes</Text>
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={styles.actionSubCategory}>
           <View style={styles.header}>
-            <Button title="EDIT" onPress={editSubCategory} />
-            {/*<Button title="DELETE" onPress={deleteSubCategory} />*/}
+            <Menu
+              visible={visibleMenuIndex === subCategory._id}
+              onDismiss={closeMenu}
+              anchor={
+                <IconButton
+                  icon="dots-vertical"
+                  onPress={() => openMenu(subCategory._id)}
+                />
+              }
+              style={{ marginTop: 0 }} // Ajuste de la posición vertical
+            >
+              <Menu.Item onPress={() => { showSubCategory() }} title="Show details" />
+              <Menu.Item onPress={() => { editSubCategory() }} title="Edit subcategory" />
+              <Menu.Item onPress={() => { deleteSubCategory() }} title="Delete subcategory" />
+            </Menu>
+
           </View>
         </View>
       </View>

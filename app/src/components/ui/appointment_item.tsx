@@ -164,21 +164,49 @@ const AppointmentItem = ({ appointment, type, user, listCategory, valueOpenAll, 
 
         {enableActions == true && (
           <View style={styles.listActions}>
+
             {appointment.complete == true && (
-              <Button style={styles.buttonStyle} buttonColor="red" textColor="white" icon="check" mode="contained-tonal" onPress={changeStateAppointment}>
-                Mark As Pending
+              <Button
+                style={styles.buttonStyle}
+                buttonColor="red"
+                textColor="white"
+                icon="check"
+                mode="contained-tonal"
+                onPress={changeStateAppointment}
+              >
+                <Text numberOfLines={1} ellipsizeMode="tail">
+                  Mark As Pending
+                </Text>
               </Button>
             )}
 
             {appointment.complete == false && (
-              <Button style={styles.buttonStyle} buttonColor="green" textColor="white" icon="check" mode="contained-tonal" onPress={changeStateAppointment}>
-                Mark As Completed
+              <Button 
+                style={styles.buttonStyle} 
+                buttonColor="green" 
+                textColor="white" 
+                icon="check" 
+                mode="contained-tonal" 
+                onPress={changeStateAppointment}
+              >
+                <Text numberOfLines={1} ellipsizeMode="tail">
+                  Complete
+                </Text>
               </Button>
             )}
 
             {appointment.approved == false && (
-              <Button style={styles.buttonStyle} buttonColor="blue" textColor="white" icon="check" mode="contained-tonal" onPress={changeApprovedAppointment}>
+              <Button 
+                style={styles.buttonStyle} 
+                buttonColor="blue" 
+                textColor="white"
+                icon="check" 
+                mode="contained-tonal" 
+                onPress={changeApprovedAppointment}
+              >
+                <Text numberOfLines={1} ellipsizeMode="tail">
                 Approved
+                </Text>
               </Button>
             )}
           </View>
@@ -232,7 +260,7 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     margin: "1%",
-    width: "70%",
+    width: "100%",
   },
 });
 

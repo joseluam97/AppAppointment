@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { useSelector } from 'react-redux';
 import { StoreRootState } from '../store/store';
-import { getFullName } from '../components/utils';
+import { getFullName, getLabelName } from '../components/utils';
+import { Avatar, Text } from 'react-native-paper';
 
 const CustomDrawerContent = (props) => {
 
@@ -25,7 +26,7 @@ const CustomDrawerContent = (props) => {
       setExitsBussines(false);
     }
   };
-  
+
   React.useEffect(() => {
     if (loggedin != undefined) {
       setExitsLogin(true);
@@ -43,12 +44,27 @@ const CustomDrawerContent = (props) => {
       setExitsLogin(false);
     }
   }, []);
-  
+
   return (
-    
+
     <DrawerContentScrollView {...props}>
 
-      <Text>{getFullName(userData)}</Text>
+<View style={styles.container}>
+        {/* Avatar con iniciales */}
+        <Avatar.Text
+          size={64}
+          label={userData?.first_name != null ? getLabelName(userData) : ""}
+          style={styles.avatar}
+        />
+        {/* Nombre del usuario */}
+        <Text variant="titleMedium" style={styles.name}>
+          {userData?.first_name != null ? getFullName(userData) : "Login not completed"}
+        </Text>
+        {/* Email del usuario */}
+        <Text variant="bodyMedium" style={styles.email}>
+          {userData?.first_name != null ? userData?.email : ""}
+        </Text>
+      </View>
 
       <DrawerItem
         label="Home"
@@ -69,7 +85,7 @@ const CustomDrawerContent = (props) => {
             label="My clients"
             onPress={() => props.navigation.navigate('myClients')}
           />
-          
+
           {!exitsBussines && (<DrawerItem
             label="Add your business"
             onPress={() => props.navigation.navigate('createBusiness')}
@@ -109,6 +125,23 @@ const CustomDrawerContent = (props) => {
 const styles = StyleSheet.create({
   subMenu: {
     paddingLeft: 20,
+  },
+  container: {
+    alignItems: 'center',
+    paddingVertical: 20,
+    backgroundColor: '#f5f5f5', // Fondo claro para resaltar el cuadro
+  },
+  avatar: {
+    marginBottom: 10,
+    backgroundColor: '#6200ee', // Color de fondo del avatar (personalizable)
+  },
+  name: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#333',
+  },
+  email: {
+    color: '#666',
   },
 });
 
