@@ -45,7 +45,10 @@ export default (props: TextFieldProps): JSX.Element => {
         validationMessage={hasError ? error?.message : undefined}
         trailingAccessory={trailingAccessoryElement}
         // Vinculando los eventos con react-hook-form
-        onChangeText={onChange} // Actualiza el estado del formulario
+        onChangeText={(text) => {
+          onChange(text); // Actualiza el estado de react-hook-form
+          if (props.onChangeText) props.onChangeText(text); // Llama a la función personalizada si está definida
+        }}
         value={value} // Estado controlado por react-hook-form
         onBlur={onBlur} // Maneja el evento onBlur
         // Nuevas propiedades específicas

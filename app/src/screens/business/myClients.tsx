@@ -9,9 +9,12 @@ import { getApointmentsByUserAndBussinesAPIAction, getNextApointmentsByUserAndBu
 import { modalViewDetailsAppointmentVisibleAPIAction } from "../../store/modals/actions";
 import DetailsAppointment from "../../components/modal/appointment/detailsAppointment";
 import { UserDataType } from "../../models/user";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function MyClients({ navigation }: any) {
   const dispatch = useDispatch<any>();
+  const isFocused = useIsFocused();
+
   const [listMyClients, setListMyClients] = useState<UserDataType[]>();
   const [visibleMenuIndex, setVisibleMenuIndex] = useState<number | null>(null);
 
@@ -19,17 +22,72 @@ export default function MyClients({ navigation }: any) {
   const listMyClientsAPI = useSelector((state: StoreRootState) => state?.user?.listMyClients ?? undefined);
   const nextAppointmentByUser = useSelector((state: StoreRootState) => state?.appointment?.nextAppointmentByUserAPI ?? undefined);
 
+  /*
+    NAME: useEffect[isFocused]
+    DESCRIPTION: When the screen loads
+  */
   useEffect(() => {
-    dispatch(getMyClientsAPIAction(userData?.my_business?._id));
-  }, []);
-
-  useEffect(() => {
-    if (listMyClientsAPI != undefined) {
-      let listClients: UserDataType[] = Object.values(listMyClientsAPI);
-      setListMyClients(listClients);
+    if (isFocused) {
+      getMyClients();
     }
-  }, [listMyClientsAPI]);
+  }, [isFocused]);
 
+  /*
+    NAME: getMyClients
+    DESCRIPTION: Get my clients in database
+    IMPUT: None
+    OUTPUT: None
+  */
+  const getMyClients = async () => {
+    const resultAction = await dispatch(getMyClientsAPIAction(userData?.my_business?._id));
+
+    if (getMyClientsAPIAction.fulfilled.match(resultAction)) {
+      if (resultAction.payload != undefined && resultAction.payload.length != 0) {
+        const listClients: UserDataType[] = Object.values(resultAction.payload);
+        setListMyClients(listClients);
+      }
+    }
+  }
+
+  /*
+    NAME: seeNextAppointment
+    DESCRIPTION: Get the next appointment about a client
+    IMPUT: clientSelected: UserDataType
+    OUTPUT: None
+  */
+  const seeNextAppointment = async (clientSelected: UserDataType) => {
+    setVisibleMenuIndex(null);
+    const resultAction = await dispatch(
+      getNextApointmentsByUserAndBussinesAPIAction({
+        user_appointment: clientSelected,
+        business_appointment: userData?.my_business._id,
+      })
+    );
+
+    if (getNextApointmentsByUserAndBussinesAPIAction.fulfilled.match(resultAction)) {
+      if (resultAction.payload != undefined) {
+        if (resultAction.payload._id != undefined) {
+          dispatch(modalViewDetailsAppointmentVisibleAPIAction(
+            { isVisible: true, mode: "details", appointment: resultAction.payload }
+          ));
+        }
+        else {
+          createToast("No upcoming appointments found.");
+        }
+      }
+    }
+  }
+
+  /*
+    SECTION: Interaction with view
+    DESCRIPTION: Methods for view logic
+    LIST:
+      - openMenu
+      - closeMenu
+      - selectedSubMenu
+      - addNewAppointment
+      - seeHistoryCliente
+  */
   const openMenu = (index: number) => {
     setVisibleMenuIndex(index);
   };
@@ -43,9 +101,9 @@ export default function MyClients({ navigation }: any) {
   }
 
   const addNewAppointment = (clientSelected: UserDataType) => {
-    navigation.navigate("appointment", { fromRouter: 'MyClients', userRouter: clientSelected});
+    navigation.navigate("appointment", { fromRouter: 'MyClients', userRouter: clientSelected });
   }
-  
+
   const seeHistoryCliente = (clientSelected: UserDataType) => {
     setVisibleMenuIndex(null);
     dispatch(setUserMyProfileAPIAction(clientSelected));
@@ -59,29 +117,6 @@ export default function MyClients({ navigation }: any) {
 
     navigation.navigate('myProfile');
   }
-
-  const seeNextAppointment = (clientSelected: UserDataType) => {
-    setVisibleMenuIndex(null);
-    dispatch(
-      getNextApointmentsByUserAndBussinesAPIAction({
-      user_appointment: clientSelected,
-      business_appointment: userData?.my_business._id,
-      })
-    );
-  }
-
-  useEffect(() => {
-    if (nextAppointmentByUser != undefined) {
-      if(nextAppointmentByUser._id != undefined){
-        dispatch(modalViewDetailsAppointmentVisibleAPIAction(
-          { isVisible: true, mode: "details", appointment: nextAppointmentByUser }
-        ));
-      }
-      else{
-        createToast("No upcoming appointments found.");
-      }
-    }
-  }, [nextAppointmentByUser]);
 
   return (
     <PaperProvider>
@@ -106,10 +141,10 @@ export default function MyClients({ navigation }: any) {
                     }
                     style={{ marginTop: -40 }} // Ajuste de la posición vertical
                   >
-                    <Menu.Item onPress={() => {addNewAppointment(client)}} title="Add new appointment" />
-                    <Menu.Item onPress={() => {seeNextAppointment(client)}} title="Check your next appointment" />
-                    <Menu.Item onPress={() => {seeHistoryCliente(client)}} title="Ver historial" />
-                    <Menu.Item onPress={() => {selectedSubMenu(client)}} title="Delete client" />
+                    <Menu.Item onPress={() => { addNewAppointment(client) }} title="Add new appointment" />
+                    <Menu.Item onPress={() => { seeNextAppointment(client) }} title="Check your next appointment" />
+                    <Menu.Item onPress={() => { seeHistoryCliente(client) }} title="Ver historial" />
+                    <Menu.Item onPress={() => { selectedSubMenu(client) }} title="Delete client" />
                   </Menu>
                 </View>
               )}

@@ -1,21 +1,15 @@
-import { useEffect, useState, useRef } from "react";
-import { View, Text, Button, TouchableOpacity, FlatList, ToastAndroid } from "react-native";
-import { FormProvider, useController, useForm } from "react-hook-form";
-import { Icons, RHFTextField, RHFPicker } from "../../components";
+import { useEffect, useState } from "react";
+import { View, Text, Button, TouchableOpacity, FlatList } from "react-native";
+import { FormProvider, useForm } from "react-hook-form";
+import { RHFTextField } from "../../components";
 
 import React from "react";
 import { StyleSheet } from "react-native";
 import globalStyles from "../../constants/globalStyles";
-//import {userLogin} from '@app/redux/actions';
-import { PickerModes, PickerValue, TextField, DateTimePicker } from "react-native-ui-lib";
-import { Picker } from "@react-native-picker/picker";
-import RNPickerSelect from "react-native-picker-select";
-import { PickerItemType } from "../../components/ui/types";
 import { StoreRootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useIsFocused } from "@react-navigation/native";
-import { unwrapResult } from "@reduxjs/toolkit";
 import MyPicker from "../../components/ui/picker";
 import DatePicker from "../../components/ui/datepicker";
 import { createToast, getNameDay, getPositionDay, listDays, transformZippopotamData } from "../../components/utils";
@@ -42,30 +36,108 @@ export default function CreateBusiness({ navigation }: any): JSX.Element {
   const [phoneBussines, setPhoneBussines] = useState<string | undefined>("");
   const [zipCodeBussines, setZipCodeBussines] = useState<string | undefined>("");
   const [selectedDay, setSelectedDay] = useState<string | undefined>("");
-  const [selectedHourOpen, setSelectedHourOpen] = useState<Date | undefined>(undefined); // Estado para el primer selector de hora
-  const [selectedHourClose, setSelectedHourClose] = useState<Date | undefined>(undefined); // Estado para el segundo selector de hora
-  const [listScheudable, setListScheudable] = useState<ScheduleDataType[]>([]); // Estado para el segundo selector de hora
+  const [selectedHourOpen, setSelectedHourOpen] = useState<Date | undefined>(undefined);
+  const [selectedHourClose, setSelectedHourClose] = useState<Date | undefined>(undefined);
+  const [listScheudable, setListScheudable] = useState<ScheduleDataType[]>([]);
 
   const resultPostBusiness = useSelector((state: StoreRootState) => state?.business?.resultPost ?? false);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
-  const result_zip_codeAPI = useSelector((state: StoreRootState) => state?.external?.result_zip_code ?? undefined);
 
+  /*
+    NAME: useEffect[isFocused]
+    DESCRIPTION: When the screen loads
+  */
+  useEffect(() => {
+    if (isFocused) {
+      clearForm();
+    }
+  }, [isFocused]);
+
+  /*
+    NAME: useEffect[resultPostBusiness]
+    DESCRIPTION: It runs when a new business is created
+  */
+  useEffect(() => {
+    if (resultPostBusiness == true) {
+      // Create toast
+      createToast("The business has been properly registered.");
+
+      // Redit to list appointment
+      navigation.navigate("home");
+    }
+  }, [resultPostBusiness]);
+
+  
+  /*
+    NAME: clearForm
+    DESCRIPTION: Clear all information
+    IMPUT: None
+    OUTPUT: None
+  */
+    const clearForm = () => {
+      form.reset();
+  
+      setSelectedHourOpen(undefined);
+      setSelectedHourClose(undefined);
+      setListScheudable([]);
+  
+      dispatch(initValueBusiness());
+      dispatch(initValueExternalData());
+    };
+
+  /*
+    NAME: getInfoAboutZipCode
+    DESCRIPTION: Get the city associated with a CP
+    IMPUT: zipCode: string
+    OUTPUT: None
+  */
+  const getInfoAboutZipCode = async (zipCode: string) => {
+    setZipCodeBussines(zipCode);
+    if (zipCode != undefined && zipCode != "" && zipCode?.length == 5) {
+      const resultAction = await dispatch(getInfoByZipCodeAPIAction(zipCode));
+
+      if (getInfoByZipCodeAPIAction.fulfilled.match(resultAction)) {
+        if (resultAction.payload != undefined) {
+
+          const result_zip_code_json = transformZippopotamData(resultAction.payload);
+
+          setCountry(result_zip_code_json?.country);
+
+          const list_places: PlacesZippopotamDataType[] = Object.values(result_zip_code_json?.places);
+          setListCityZipCode(list_places);
+          if (list_places.length != 0) {
+            setCityZipCode(list_places[0]?._id);
+          }
+        }
+        else {
+          setListCityZipCode([]);
+          setCityZipCode(undefined);
+        }
+      }
+    }
+  };
+
+  /*
+    NAME: createNewBussiness
+    DESCRIPTION: A new business is created
+    IMPUT: formData: BusinessDataType
+    OUTPUT: None
+  */
   const createNewBussiness = (formData: BusinessDataType) => {
-    console.log("FROM SENT - INI");
 
-    if ( cityZipCode != undefined &&
+    if (cityZipCode != undefined &&
       nameBussines != undefined && nameBussines != "" && adressBussines != undefined && adressBussines != "" &&
-      phoneBussines != undefined && phoneBussines != "" && zipCodeBussines != undefined && zipCodeBussines != "" && listScheudable.length != 0 ) {
-      
+      phoneBussines != undefined && phoneBussines != "" && zipCodeBussines != undefined && zipCodeBussines != "" && listScheudable.length != 0) {
+
       // Get value by _id
       let city_selected: string = "";
       let element_selected = listCityZipCode.filter(element => element._id == cityZipCode)[0]
 
-      if(element_selected != undefined){
+      if (element_selected != undefined) {
         city_selected = element_selected?.place_name;
       }
 
-        dispatch(
+      dispatch(
         postBussinesAPIAction({
           name: nameBussines,
           address: adressBussines,
@@ -78,121 +150,20 @@ export default function CreateBusiness({ navigation }: any): JSX.Element {
           user: userData?._id,
         })
       );
-    } 
+    }
     else {
       createToast("Complete all the requested data.");
     }
 
-    console.log("FROM SENT - END");
   };
 
-  useEffect(() => {
-    if (resultPostBusiness == true) {
-      // Create toast
-      createToast("The business has been properly registered.");
-
-      // Redit to list appointment
-      navigation.navigate("home");
-    }
-  }, [resultPostBusiness]);
-
-  const clearForm = () => {
-    console.log("clearForm- INI");
-    // Clear form
-    setNameBussines("");
-    setAdressBussines("");
-    setPhoneBussines("");
-    setZipCodeBussines("");
-    setSelectedDay("");
-    setSelectedHourOpen(undefined);
-    setSelectedHourClose(undefined);
-    setListScheudable([]);
-
-    dispatch(initValueBusiness());
-    dispatch(initValueExternalData());
-    console.log("clearForm- END");
-  };
-
-  useEffect(() => {
-    clearForm();
-  }, []);
-
-  useEffect(() => {
-    console.log("isFocused- INI");
-    if (isFocused) {
-      clearForm();
-    }
-    console.log("isFocused- END");
-  }, [isFocused]);
-
-  useEffect(() => {
-    console.log("zipCodeBussines - INI");
-    if (zipCodeBussines != undefined && zipCodeBussines != "" && zipCodeBussines?.length == 5) {
-      console.log("zipCodeBussines - EXEC");
-      dispatch(getInfoByZipCodeAPIAction(zipCodeBussines));
-    }
-    console.log("zipCodeBussines - END");
-  }, [zipCodeBussines]);
-  
-  useEffect(() => {
-    console.log("result_zip_codeAPI- INI");
-    console.log(result_zip_codeAPI);
-    if (result_zip_codeAPI != undefined) {
-
-      const result_zip_code_json = transformZippopotamData(result_zip_codeAPI);
-
-      setCountry(result_zip_code_json?.country);
-      
-      const list_places: PlacesZippopotamDataType[] = Object.values(result_zip_code_json?.places);
-      setListCityZipCode(list_places);
-      if(list_places.length != 0){
-        setCityZipCode(list_places[0]?._id);
-      }
-    }
-    else{
-      setListCityZipCode([]);
-      setCityZipCode(undefined);
-    }
-    console.log("result_zip_code_json- END");
-  }, [result_zip_codeAPI]);
-
-  const valueCityZipCodeChange = (value: any) => {
-    setCityZipCode(value)
-
-    // Get value by _id
-    let element_selected = listCityZipCode.filter(element => element._id == value)[0]
-
-    if(element_selected != undefined){
-      setProvince(element_selected?.state);
-    }
-
-  }
-
-  const formatTime = (dateInt: any) => {
-    const fecha = new Date(dateInt);
-
-    // Obtener la hora y los minutos
-    const horas = fecha.getHours().toString().padStart(2, "0");
-    const minutos = fecha.getMinutes().toString().padStart(2, "0");
-
-    // Formatear la hora y los minutos como una cadena
-    const horaFormateada = `${horas}:${minutos}`;
-
-    return horaFormateada;
-  };
-
-  // Función para manejar el cambio de valor en el primer selector de hora
-  const handleHourOpenChange = (date: Date) => {
-    setSelectedHourOpen(date);
-  };
-
-  // Función para manejar el cambio de valor en el segundo selector de hora
-  const handleHourCloseChange = (date: Date) => {
-    setSelectedHourClose(date);
-  };
-
+  /*
+    NAME: createNewScheudable
+    DESCRIPTION: Create a new scheudable in database
+    IMPUT: None
+    OUTPUT: None
+  */
   const createNewScheudable = () => {
-    console.log("-createNewScheudable INI-");
     if (selectedDay != "" && selectedDay != undefined && selectedHourOpen != undefined && selectedHourClose != undefined) {
       // Check if the dates are correct
       let time_open: Date = new Date(selectedHourOpen);
@@ -232,11 +203,26 @@ export default function CreateBusiness({ navigation }: any): JSX.Element {
     } else {
       createToast("Complete all requested data to add a new time slot.");
     }
-    console.log("-createNewScheudable END-");
   };
 
+
+  /*
+    SECTION: Interaction with view
+    DESCRIPTION: Methods for view logic
+    LIST:
+      - valueCityZipCodeChange
+      - deleteItemArray
+      - renderItem
+  */
+  const valueCityZipCodeChange = (value: any) => {
+    setCityZipCode(value)
+    // Get value by _id
+    let element_selected = listCityZipCode.filter(element => element._id == value)[0]
+    if (element_selected != undefined) {
+      setProvince(element_selected?.state);
+    }
+  }
   const deleteItemArray = (item_delete: ScheduleDataType) => {
-    console.log("DELETE ITEM ARRAY");
 
     const updatedListScheudable = [...listScheudable];
     const indexToDelete = updatedListScheudable.findIndex((item) => item._id === item_delete._id);
@@ -247,7 +233,7 @@ export default function CreateBusiness({ navigation }: any): JSX.Element {
 
     setListScheudable(updatedListScheudable);
   };
-  // Renderizar cada elemento del listado
+
   const renderItem = ({ item }: { item: ScheduleDataType }) => (
     <TouchableOpacity onPress={() => deleteItemArray(item)}>
       <View style={stylesScheudable.item}>
@@ -261,41 +247,33 @@ export default function CreateBusiness({ navigation }: any): JSX.Element {
   return (
     <View style={styles?.containerBase}>
       <FormProvider {...form}>
-        <RHFTextField 
-          value={nameBussines} 
-          name="name" 
-          label="Name" 
-          //rules={{ required: "Enter name please!" }}
-          onChangeText={(value) => setNameBussines(value)} 
-        />
-
-        <RHFTextField 
-          value={adressBussines} 
-          name="address" 
-          label="Address" 
-          //rules={{ required: "Enter address please!" }} 
-          onChangeText={(value) => setAdressBussines(value)} 
+        <RHFTextField
+          name="name"
+          label="Name"
+          onChangeText={(value) => setNameBussines(value)}
         />
 
         <RHFTextField
-          value={phoneBussines}
+          name="address"
+          label="Address"
+          onChangeText={(value) => setAdressBussines(value)}
+        />
+
+        <RHFTextField
           name="phone"
           label="Phone"
-          //rules={{ required: "Enter phone please!" }}
           keyboardType="phone-pad"
           maxLength={10}
           onChangeText={(value) => setPhoneBussines(value)}
         />
 
         <RHFTextField
-          value={zipCodeBussines}
           name="zip_code"
           label="Zip Code"
-          //rules={{ required: "Enter zip code please!" }}
           keyboardType="phone-pad"
           mask="99999"
           maxLength={5}
-          onChangeText={(value) => setZipCodeBussines(value)}
+          onChangeText={(value) => getInfoAboutZipCode(value)}
         />
 
         <MyPicker
@@ -322,11 +300,23 @@ export default function CreateBusiness({ navigation }: any): JSX.Element {
           </View>
           {/* Selector de hora 1 */}
           <View style={{ flex: 1 }}>
-            <DatePicker name="picker1" label="Select opening time" mode="time" value={selectedHourOpen != undefined ? new Date(selectedHourOpen) : ""} onChange={handleHourOpenChange} />
+            <DatePicker
+              name="picker1"
+              label="Select opening time"
+              mode="time"
+              value={selectedHourOpen != undefined ? new Date(selectedHourOpen) : ""}
+              onChange={(value) => setSelectedHourOpen(value)}
+            />
           </View>
           {/* Selector de hora 2 */}
           <View style={{ flex: 1 }}>
-            <DatePicker name="picker2" label="Select the closing time" mode="time" value={selectedHourClose != undefined ? new Date(selectedHourClose) : ""} onChange={handleHourCloseChange} />
+            <DatePicker
+              name="picker2"
+              label="Select the closing time"
+              mode="time"
+              value={selectedHourClose != undefined ? new Date(selectedHourClose) : ""}
+              onChange={(value) => setSelectedHourClose(value)}
+            />
           </View>
         </View>
       </FormProvider>
@@ -347,7 +337,7 @@ const styles: any = StyleSheet.flatten([
   globalStyles,
   StyleSheet.create({
     inputLeftIcon: {
-      marginRight: 8,
+      marginRight: 1,
     },
   }),
 ]);
@@ -358,7 +348,7 @@ const stylesScheudable = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between", // Cambiado a 'space-between' para distribuir los elementos
     marginBottom: 10,
-    paddingHorizontal: 20, // Añadido para dar espacio horizontal a los elementos
+    paddingHorizontal: 0, // Añadido para dar espacio horizontal a los elementos
   },
   button: {
     height: 40,

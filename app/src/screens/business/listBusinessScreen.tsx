@@ -32,27 +32,21 @@ const ListBusiness = () => {
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
   const resultPutAPI = useSelector((state: StoreRootState) => state?.user?.resultPut ?? false);
 
-  useEffect(() => {
-    
-  }, []);
-
+  /*
+    NAME: useEffect[isFocused]
+    DESCRIPTION: When the screen loads
+  */
   useEffect(() => {
     if (isFocused) {
-      dispatch(getAllBusinessAPIAction());
+      getAllBussines();
     }
   }, [isFocused]);
 
+  /*
+    NAME: useEffect[resultPutAPI, userData]
+    DESCRIPTION: When a business is updated
+  */
   useEffect(() => {
-    console.log("list_bussinesAPI INI")
-    if (list_bussinesAPI != undefined && list_bussinesAPI.length != 0) {
-      const categoryArray: BusinessDataType[] = Object.values(list_bussinesAPI);
-      setListBusiness(categoryArray);
-    }
-    console.log("list_bussinesAPI - END")
-  }, [list_bussinesAPI]);
-
-  useEffect(() => {
-    console.log("-resultPutAPI INI-")
     if (resultPutAPI == true) {
       let listBusiness: BusinessDataType[] = Object.values(list_bussinesAPI);
       let listBusinessCopy = [...listBusiness];
@@ -65,11 +59,32 @@ const ListBusiness = () => {
       }
       setOperationRequest("")
     }
-    console.log("-resultPutAPI END-")
   }, [resultPutAPI, userData]);
 
+  /*
+    NAME: getAllBussines
+    DESCRIPTION: Get all bussines in database
+    IMPUT: None
+    OUTPUT: None
+  */
+  const getAllBussines = async () => {
+    const resultAction = await dispatch(getAllBusinessAPIAction());
+
+    if (getAllBusinessAPIAction.fulfilled.match(resultAction)) {
+      if (resultAction.payload != undefined && resultAction.payload.length != 0) {
+        const categoryArray: BusinessDataType[] = Object.values(resultAction.payload);
+        setListBusiness(categoryArray);
+      }
+    }
+  }
+
+  /*
+    NAME: saveOrDeleteBusiness
+    DESCRIPTION: Save or delete bussines in my list
+    IMPUT: item: BusinessDataType
+    OUTPUT: None
+  */
   const saveOrDeleteBusiness = (item: BusinessDataType) => {
-    console.log("-saveOrDeleteBusiness-")
     let result_filter = userData?.list_business.filter(elemento => elemento._id == item?._id)[0]
     
     if(result_filter == undefined){
@@ -99,11 +114,14 @@ const ListBusiness = () => {
     }
   }
 
+  /*
+    SECTION: Interaction with view
+    DESCRIPTION: Methods for view logic
+    LIST:
+      - checkIfUserSaveBusiness
+  */
   const checkIfUserSaveBusiness = (item: BusinessDataType) => {
-    console.log("----checkIfUserSaveBusiness INI----")
-
     let result_filter = userData?.list_business.filter(elemento => elemento._id == item?._id)[0]
-
     if(result_filter == undefined){
       return "ADD TO MY SHOPS";
     }

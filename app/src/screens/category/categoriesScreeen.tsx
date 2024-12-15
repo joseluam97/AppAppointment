@@ -19,7 +19,6 @@ export default function Categories({ navigation }: any) {
   const [listCategory, setListCategory] = useState<CategoryDataType[]>();
 
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
-  const listCategoryAPI = useSelector((state: StoreRootState) => state?.category?.listCategoryAPI ?? undefined);
 
   const resultPostSubCategoryAPI = useSelector((state: StoreRootState) => state?.subCategory?.resultPost ?? undefined);
   const resultPutSubCategoryAPI = useSelector((state: StoreRootState) => state?.subCategory?.resultPut ?? undefined);
@@ -27,31 +26,58 @@ export default function Categories({ navigation }: any) {
   const resultPutCategoryAPI = useSelector((state: StoreRootState) => state?.category?.resultPut ?? undefined);
   const modalCreateCategoryAPI = useSelector((state: StoreRootState) => state?.modals?.modalCreateCategory ?? undefined);
 
+  /*
+    NAME: useEffect[isFocused]
+    DESCRIPTION: When the screen loads
+  */
   useEffect(() => {
     if (isFocused) {
-      dispatch(getCategoryByBusinessAPIAction(userData?.my_business?._id));
-
+      getCategorys();
       dispatch(initialStateModalsAPIAction());
     }
   }, [isFocused]);
 
+  /*
+    NAME: useEffect[modalCreateCategoryAPI]
+    DESCRIPTION: When there is a change in any of the specified variables, the categories are updated.
+  */
   useEffect(() => {
-    dispatch(getCategoryByBusinessAPIAction(userData?.my_business?._id));
+    getCategorys();
   }, [modalCreateCategoryAPI]);
   
+  /*
+    NAME: useEffect[resultPostSubCategoryAPI, resultPutSubCategoryAPI, resultPostCategoryAPI, resultPutCategoryAPI]
+    DESCRIPTION: When there is a change in any of the specified variables, the categories are updated.
+  */
   useEffect(() => {
     if(resultPostSubCategoryAPI == true || resultPutSubCategoryAPI == true){
-      dispatch(getCategoryByBusinessAPIAction(userData?.my_business?._id));
+      getCategorys();
     }
   }, [resultPostSubCategoryAPI, resultPutSubCategoryAPI, resultPostCategoryAPI, resultPutCategoryAPI]);
 
-  useEffect(() => {
-    if(listCategoryAPI != undefined){
-      const categoryArray: CategoryDataType[] = Object.values(listCategoryAPI);
-      setListCategory(categoryArray);
-    }
-  }, [listCategoryAPI]);
+  /*
+    NAME: getCategorys
+    DESCRIPTION: Get the categories
+    IMPUT: None
+    OUTPUT: None
+  */
+  const getCategorys = async () => {
+    const resultAction = await dispatch(getCategoryByBusinessAPIAction(userData?.my_business?._id));
 
+    if (getCategoryByBusinessAPIAction.fulfilled.match(resultAction)) {
+      if (resultAction.payload != undefined && resultAction.payload.length != 0) {
+        const categoryArray: CategoryDataType[] = Object.values(resultAction.payload);
+        setListCategory(categoryArray);
+      }
+    }
+  }
+
+  /*
+    NAME: createCategory
+    DESCRIPTION: Opens the dialog to create a new category
+    IMPUT: None
+    OUTPUT: None
+  */
   const createCategory = () => {
     if(modalCreateCategoryAPI == true){
       dispatch(modalCreateCategoryVisibleAPIAction({ isVisible: false, mode: "new" }));
