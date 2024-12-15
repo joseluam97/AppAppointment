@@ -3,12 +3,13 @@ import { StatusBar } from "expo-status-bar";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { StoreRootState } from "../../../store/store";
-import { AppointmentDataType, CategoryDataType } from "../../types";
 import { PaperProvider, SegmentedButtons } from "react-native-paper";
 import AppointmentItem from "../../../components/ui/appointment_item";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { getAllCategoryAPIAction, getApointmentsByUserAndBussinesAPIAction } from "../../../store/appointment/actions";
 import AppointmentTable from "../../../components/ui/appointment_table";
+import { AppointmentDataType } from "../../../models/appointment";
+import { CategoryDataType } from "../../../models/category";
 
 export default function UpcomingAppointment({ navigation }: any) {
   const dispatch = useDispatch<any>();

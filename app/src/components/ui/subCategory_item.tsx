@@ -1,14 +1,10 @@
 import React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
-import { DurationFormatter, TimeFormatter } from "../textFormatter";
-import { MaterialIcons } from "@expo/vector-icons";
-import { AppointmentDataType, CategoryDataType } from "../../screens/types";
 import theme from "../../constants/theme";
-import CreateSubCategory from "../modal/createSubCategory";
 import { modalCreateSubCategoryVisibleAPIAction } from "../../store/modals/actions";
-import { useDispatch, useSelector } from "react-redux";
-import { Avatar, Card, IconButton, Menu, Provider as PaperProvider } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import { IconButton, Menu, Provider as PaperProvider } from "react-native-paper";
 
 const SubCategoryItem = ({ category, subCategory }) => {
   const dispatch = useDispatch<any>();

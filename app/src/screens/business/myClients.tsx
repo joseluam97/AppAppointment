@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Avatar, Card, IconButton, Menu, Provider as PaperProvider } from "react-native-paper";
 import { getMyClientsAPIAction, setUserMyProfileAPIAction } from "../../store/user/actions";
 import { StoreRootState } from "../../store/store";
-import { UserDataType } from "../types";
 import { createToast, getFullName, getLabelName } from "../../components/utils";
 import { getApointmentsByUserAndBussinesAPIAction, getNextApointmentsByUserAndBussinesAPIAction } from "../../store/appointment/actions";
 import { modalViewDetailsAppointmentVisibleAPIAction } from "../../store/modals/actions";
-import DetailsAppointment from "../../components/modal/detailsAppointment";
+import DetailsAppointment from "../../components/modal/appointment/detailsAppointment";
+import { UserDataType } from "../../models/user";
 
 export default function MyClients({ navigation }: any) {
   const dispatch = useDispatch<any>();

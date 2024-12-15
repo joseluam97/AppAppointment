@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View, TouchableOpacity } from "react-native";
-import { RHFTextField } from "..";
+import { RHFTextField } from "../..";
 import { FormProvider, useForm } from "react-hook-form";
-import { CategoryDataType } from "../../screens/types";
 import { useDispatch, useSelector } from "react-redux";
-import { postCategoryAPIAction, putCategoryAPIAction } from "../../store/category/actions";
-import { StoreRootState } from "../../store/store";
-import { modalCreateCategoryVisibleAPIAction } from "../../store/modals/actions";
-import { initialStateSubCategoryAPIAction } from "../../store/subCategory/actions";
+import { postCategoryAPIAction, putCategoryAPIAction } from "../../../store/category/actions";
+import { StoreRootState } from "../../../store/store";
+import { modalCreateCategoryVisibleAPIAction } from "../../../store/modals/actions";
+import { initialStateSubCategoryAPIAction } from "../../../store/subCategory/actions";
+import { CategoryDataType } from "../../../models/category";
 
 const CreateCategory = () => {
   const dispatch = useDispatch<any>();

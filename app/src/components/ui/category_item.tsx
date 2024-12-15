@@ -3,9 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button } from "react-native";
 import { DurationFormatter, TimeFormatter } from "../textFormatter";
 import { MaterialIcons } from "@expo/vector-icons";
-import { AppointmentDataType, CategoryDataType } from "../../screens/types";
 import SubCategoryItem from "./subCategory_item";
-import CreateSubCategory from "../modal/createSubCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { modalCreateCategoryVisibleAPIAction, modalCreateSubCategoryVisibleAPIAction } from "../../store/modals/actions";
 

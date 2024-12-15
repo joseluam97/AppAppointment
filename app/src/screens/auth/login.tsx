@@ -5,11 +5,11 @@ import { Icons, RHFTextField } from "../../components";
 
 import React from "react";
 import globalStyles from "../../constants/globalStyles";
-import { UserDataType } from "../types";
 import { loginUserAPIAction, initValue } from "../../store/user/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from '@react-navigation/native';
 import { StoreRootState } from "../../store/store";
+import { UserDataType } from "../../models/user";
 
 export default function Login({ navigation }: any): JSX.Element {
   const form = useForm<UserDataType>();

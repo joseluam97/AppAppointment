@@ -1,10 +1,10 @@
-import { BusinessDataType } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import {
   postBussinesAPIAction,
   initValueBusiness,
   getAllBusinessAPIAction
 } from "./actions";
+import { BusinessDataType } from "../../models/business";
 
 type InitialStateType = {
   resultPost: boolean;

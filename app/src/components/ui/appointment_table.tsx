@@ -3,14 +3,15 @@ import { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { DateFormatter, DurationFormatter, format_time_appointment, TimeFormatter } from "../textFormatter";
 import { MaterialIcons } from "@expo/vector-icons";
-import { AppointmentDataType, CategoryDataType } from "../../screens/types";
 import { putAppointmentAPIAction, resetPutAppointment } from "../../store/appointment/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreRootState } from "../../store/store";
 import { createToast } from "../utils";
 import { Button, DataTable, TextInput } from "react-native-paper";
 import { modalViewDetailsAppointmentVisibleAPIAction } from "../../store/modals/actions";
-import DetailsAppointment from "../modal/detailsAppointment";
+import DetailsAppointment from "../modal/appointment/detailsAppointment";
+import { AppointmentDataType } from "../../models/appointment";
+import { CategoryDataType } from "../../models/category";
 
 const AppointmentTable = ({ listAppointment, listCategory }) => {
   const dispatch = useDispatch<any>();

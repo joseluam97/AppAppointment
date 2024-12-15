@@ -3,7 +3,6 @@ import { POST_BUSINESS, INIT_VALUE_BUSINESS, GET_ALL_BUSINESS } from "./types";
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { BusinessDataType } from "../../screens/types";
 import { URL_API } from "../../constants/constant";
 
 const urlBusiness = URL_API + "/business";

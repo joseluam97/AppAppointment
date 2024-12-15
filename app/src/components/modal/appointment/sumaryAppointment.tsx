@@ -2,10 +2,10 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Button, Dialog, Portal, PaperProvider, Text } from "react-native-paper";
-import { DateFormatter } from "../textFormatter";
-import { StoreRootState } from "../../store/store";
+import { DateFormatter } from "../../textFormatter";
+import { StoreRootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { modalViewSumaryAppointmentVisibleAPIAction } from "../../store/modals/actions";
+import { modalViewSumaryAppointmentVisibleAPIAction } from "../../../store/modals/actions";
 
 const SumaryAppointment = ({dateAppointmentSelected, listAppointment}) => {
   const dispatch = useDispatch<any>();

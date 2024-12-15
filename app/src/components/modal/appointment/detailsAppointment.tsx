@@ -2,11 +2,12 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Button, Dialog, Portal, PaperProvider, Text, Paragraph } from "react-native-paper";
-import { DateFormatter, format_time_appointment } from "../textFormatter";
-import { StoreRootState } from "../../store/store";
+import { DateFormatter, format_time_appointment } from "../../textFormatter";
+import { StoreRootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { modalViewDetailsAppointmentVisibleAPIAction } from "../../store/modals/actions";
-import { AppointmentDataType, BusinessDataType, CategoryDataType } from "../../screens/types";
+import { modalViewDetailsAppointmentVisibleAPIAction } from "../../../store/modals/actions";
+import { AppointmentDataType } from "../../../models/appointment";
+import { CategoryDataType } from "../../../models/category";
 
 const DetailsAppointment = () => {
   const dispatch = useDispatch<any>();

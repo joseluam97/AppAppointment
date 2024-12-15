@@ -1,6 +1,7 @@
-import { AppointmentDataType, SubCategoryDataType, CategoryDataType, TimeAvailableForAppointment } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import { modalCreateSubCategoryVisibleAPIAction, initialStateModalsAPIAction, modalCreateCategoryVisibleAPIAction, modalViewSumaryAppointmentVisibleAPIAction, modalViewDetailsAppointmentVisibleAPIAction} from "./actions";
+import { AppointmentDataType } from "../../models/appointment";
+import { CategoryDataType, SubCategoryDataType } from "../../models/category";
 
 type InitialStateType = {
   // MODAL CREATION CATEGORY

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Modal, StyleSheet, Pressable, View, TouchableOpacity } from "react-native";
-import { RHFTextField } from "..";
+import { RHFTextField } from "../..";
 import { FormProvider, useForm } from "react-hook-form";
-import { SubCategoryDataType } from "../../screens/types";
 import { useDispatch, useSelector } from "react-redux";
-import { postCategoryAPIAction } from "../../store/category/actions";
-import { StoreRootState } from "../../store/store";
+import { postCategoryAPIAction } from "../../../store/category/actions";
+import { StoreRootState } from "../../../store/store";
 import { Button, Dialog, Portal, PaperProvider, Text } from "react-native-paper";
-import DatePicker from "../ui/datepicker";
-import { getTimeInHoursAndMinutes } from "../utils";
-import { initialStateSubCategoryAPIAction, postSubCategoryAPIAction, putSubCategoryAPIAction } from "../../store/subCategory/actions";
-import { modalCreateSubCategoryVisibleAPIAction } from "../../store/modals/actions";
+import DatePicker from "../../ui/datepicker";
+import { getTimeInHoursAndMinutes } from "../../utils";
+import { initialStateSubCategoryAPIAction, postSubCategoryAPIAction, putSubCategoryAPIAction } from "../../../store/subCategory/actions";
+import { modalCreateSubCategoryVisibleAPIAction } from "../../../store/modals/actions";
+import { SubCategoryDataType } from "../../../models/category";
 
 const CreateSubCategory = () => {
   const dispatch = useDispatch<any>();

@@ -1,6 +1,6 @@
-import { AppointmentDataType, SubCategoryDataType, TimeAvailableForAppointment } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import { initialStateSubCategoryAPIAction, getSubCategoryByBusinessAPIAction, postSubCategoryAPIAction, putSubCategoryAPIAction } from "./actions";
+import { SubCategoryDataType } from "../../models/category";
 
 type InitialStateType = {
   resultPost: boolean;

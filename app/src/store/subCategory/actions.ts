@@ -3,8 +3,8 @@ import { GET_SUB_CATEGORY, POST_SUB_CATEGORY, PUT_SUB_CATEGORY, INIT_VALUE_SUB_C
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppointmentDataType, BusinessDataType, SubCategoryDataType } from "../../screens/types";
 import { URL_API } from "../../constants/constant";
+import { SubCategoryDataType } from "../../models/category";
 
 const urlSubCategory = URL_API + "/subCategory";
 

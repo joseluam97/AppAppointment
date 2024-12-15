@@ -3,7 +3,6 @@ import { GET_CATEGORY_BY_BUSINESS, POST_CATEGORY, PUT_CATEGORY, INIT_VALUE_CATEG
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppointmentDataType, BusinessDataType, CategoryDataType } from "../../screens/types";
 import { URL_API } from "../../constants/constant";
 
 const urlCategory = URL_API + "/category";

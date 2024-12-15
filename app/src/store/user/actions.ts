@@ -3,8 +3,8 @@ import { LOGIN_USER, INIT_VALUE, LOG_OUT_USER, PUT_USER, GET_MY_CLIENTS, SET_USE
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppointmentDataType, UserDataType } from "../../screens/types";
 import { URL_API } from "../../constants/constant";
+import { UserDataType } from "../../models/user";
 
 const urlUser = URL_API + "/user";
 

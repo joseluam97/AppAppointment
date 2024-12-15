@@ -3,7 +3,7 @@ import 'intl/locale-data/jsonp/mn-MN';
 
 import {DateTime} from 'luxon';
 import {constantValues} from '../constants';
-import { AppointmentDataType } from '../screens/types';
+import { AppointmentDataType } from '../models/appointment';
 
 export function CurrencyFormatter(
   currencyCode: string = 'MNT',

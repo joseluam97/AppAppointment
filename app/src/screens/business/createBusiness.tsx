@@ -5,7 +5,6 @@ import { Icons, RHFTextField, RHFPicker } from "../../components";
 
 import React from "react";
 import { StyleSheet } from "react-native";
-import { AppointmentDataType, CategoryDataType, TimeAvailableForAppointment, BusinessDataType, ScheduleDataType, PlacesZippopotamDataType, ZippopotamDataType } from "../types";
 import globalStyles from "../../constants/globalStyles";
 //import {userLogin} from '@app/redux/actions';
 import { PickerModes, PickerValue, TextField, DateTimePicker } from "react-native-ui-lib";
@@ -23,6 +22,8 @@ import { createToast, getNameDay, getPositionDay, listDays, transformZippopotamD
 import { TimeFormatter } from "../../components/textFormatter";
 import { initValueBusiness, postBussinesAPIAction } from "../../store/business/actions";
 import { getInfoByZipCodeAPIAction, initValueExternalData } from "../../store/external/actions";
+import { BusinessDataType, ScheduleDataType } from "../../models/business";
+import { PlacesZippopotamDataType } from "../../models/zipCode";
 
 export default function CreateBusiness({ navigation }: any): JSX.Element {
   const dispatch = useDispatch<any>();

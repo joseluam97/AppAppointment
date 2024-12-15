@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState, useRef } from "react";
 import { StoreRootState } from "../../store/store";
-import { AppointmentDataType, UserDataType } from "../types";
 import { getFullName, getLabelName } from "../../components/utils";
 import Information from "./capabilities/information";
 import AppointmentHistory from "./capabilities/appointment_history";
@@ -12,7 +11,9 @@ import Notes from "./capabilities/notes";
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { Avatar, Button, Card, Text, SegmentedButtons, BottomNavigation, Title, Paragraph } from "react-native-paper";
 import { DateFormatter } from "../../components/textFormatter";
-import DetailsAppointment from "../../components/modal/detailsAppointment";
+import DetailsAppointment from "../../components/modal/appointment/detailsAppointment";
+import { AppointmentDataType } from "../../models/appointment";
+import { UserDataType } from "../../models/user";
 
 export default function MyProfile({ navigation }: any) {
   const dispatch = useDispatch<any>();

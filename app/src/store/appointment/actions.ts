@@ -3,8 +3,10 @@ import { RESET_PUT_APPOINTMENT, PUT_APPOINTMENT, GET_APPOINTMENT_WITH_FILTERS, P
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppointmentDataType, BusinessDataType, UserDataType } from "../../screens/types";
 import { URL_API } from "../../constants/constant";
+import { AppointmentDataType } from "../../models/appointment";
+import { BusinessDataType } from "../../models/business";
+import { UserDataType } from "../../models/user";
 
 const urlCategory = URL_API + "/category";
 const urlAppointment = URL_API + "/appointment";
@@ -26,12 +28,6 @@ export const getNextApointmentsByUserAndBussinesAPIAction = createAsyncThunk(GET
     });
 
     // Devuelve los datos del usuario si la solicitud es exitosa
-    console.log("-response.data-")
-    console.log(response.data)
-    console.log("-response.data-")
-    console.log(response.data.length)
-    console.log("-length-")
-
     if(response.data.length >= 1){
       return response.data[0];
     }

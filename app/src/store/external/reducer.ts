@@ -1,9 +1,9 @@
-import { AppointmentDataType, SubCategoryDataType, CategoryDataType, TimeAvailableForAppointment, UserDataType, ZippopotamDataType } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import {
   getInfoByZipCodeAPIAction,
   initValueExternalData,
 } from "./actions";
+import { ZippopotamDataType } from "../../models/zipCode";
 
 type InitialStateType = {
   result_zip_code: ZippopotamDataType | undefined;

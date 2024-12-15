@@ -8,12 +8,13 @@ import AppointmentItem from "../../components/ui/appointment_item";
 import DatePicker from "../../components/ui/datepicker";
 import { StoreRootState } from "../../store/store";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { AppointmentDataType, CategoryDataType, BusinessDataType, UserDataType } from "../types";
 import { Icons } from "../../components";
 import { getAllBusinessAPIAction } from "../../store/business/actions";
 import BusinessItem from "../../components/ui/business_item";
 import { putUserAPIAction } from "../../store/user/actions";
 import { createToast } from "../../components/utils";
+import { BusinessDataType } from "../../models/business";
+import { UserDataType } from "../../models/user";
 
 const ListBusiness = () => {
   const navigation = useNavigation();

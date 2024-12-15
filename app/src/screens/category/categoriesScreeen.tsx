@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState, useRef } from "react";
 import { StoreRootState } from "../../store/store";
-import { CategoryDataType } from "../types";
 import { getCategoryByBusinessAPIAction, postCategoryAPIAction } from "../../store/category/actions";
 import CategoryItem from "../../components/ui/category_item";
-import CreateCategory from "../../components/modal/createCategory";
+import CreateCategory from "../../components/modal/category/createCategory";
 import { initialStateModalsAPIAction, modalCreateCategoryVisibleAPIAction } from "../../store/modals/actions";
-import CreateSubCategory from "../../components/modal/createSubCategory";
+import CreateSubCategory from "../../components/modal/category/createSubCategory";
+import { CategoryDataType } from "../../models/category";
 
 export default function Categories({ navigation }: any) {
   

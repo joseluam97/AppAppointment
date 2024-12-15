@@ -1,10 +1,9 @@
 import "intl";
 import "intl/locale-data/jsonp/mn-MN";
 
-import { DateTime } from "luxon";
-import { constantValues } from "../constants";
 import { ToastAndroid } from "react-native";
-import { UserDataType, ZippopotamDataType } from "../screens/types";
+import { ZippopotamDataType } from "../models/zipCode";
+import { UserDataType } from "../models/user";
 
 export const listDays: string[] = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
 

@@ -3,17 +3,19 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native
 import { FormProvider, useForm } from "react-hook-form";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllApointmentAPIAction, getApointmentsWithFiltersAPIAction, resetPutAppointment } from "../../store/appointment/actions";
+import { getApointmentsWithFiltersAPIAction } from "../../store/appointment/actions";
 import AppointmentItem from "../../components/ui/appointment_item";
 import DatePicker from "../../components/ui/datepicker";
 import { StoreRootState } from "../../store/store";
-import { AppointmentDataType, CategoryDataType } from "../types";
 import { Icons } from "../../components";
 import { Button, FAB, PaperProvider } from "react-native-paper";
-import SumaryAppointment from "../../components/modal/sumaryAppointment";
+import SumaryAppointment from "../../components/modal/appointment/sumaryAppointment";
 import { URL_API } from "../../constants/constant";
 import io from 'socket.io-client';
 import { EVENT_DELETE_APPOINTMENT, EVENT_POST_APPOINTMENT, EVENT_PUT_APPOINTMENT } from "../../constants/list_events";
+import { getCategoryByBusinessAPIAction } from "../../store/category/actions";
+import { CategoryDataType } from "../../models/category";
+import { AppointmentDataType } from "../../models/appointment";
 
 const socket = io(URL_API);
 
@@ -24,7 +26,6 @@ const ListAppointment = () => {
 
   const form = useForm<any>();
 
-  const [appointmentSelected, setAppointmentSelected] = useState<AppointmentDataType>();
   const [listAppointment, setListAppointment] = useState<AppointmentDataType[]>();
   const [listCategory, setListCategory] = useState<CategoryDataType[]>();
   const [openAll, setOpenAll] = useState<boolean | undefined>(undefined);
@@ -32,30 +33,40 @@ const ListAppointment = () => {
   const [seeAppointmentByFilters, setSeeAppointmentByFilters] = useState<boolean | undefined>(false);
   const [seeAppointmentByPendingApproved, setSeeAppointmentByPendingApproved] = useState<boolean | undefined>(false);
 
-  const listCategoryAPI = useSelector((state: StoreRootState) => state?.appointment?.listCategoryAPI ?? []);
   const listAppointmentAPI = useSelector((state: StoreRootState) => state?.appointment?.listAppointmentAPI ?? []);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
-  const resultPutAppointment = useSelector((state: StoreRootState) => state?.appointment?.resultPut ?? false);
 
+  /*
+    NAME: useEffect[isFocused]
+    DESCRIPTION: When the screen loads
+  */
   useEffect(() => {
-    //dispatch(getAllApointmentAPIAction());
-  }, []);
+    if (isFocused) {
+      getAppointmentToDisplay();
+      getCategorysByBussines();
+    }
+  }, [isFocused]);
 
+  /*
+    NAME: useEffect[]
+    DESCRIPTION: Event management with the backend
+  */
   useEffect(() => {
+    let dateToUpdate: Date = dateAppointmentSelected != undefined ? dateAppointmentSelected : new Date();
     // Suscribirse al evento de actualización de la base de datos
     socket.on(EVENT_POST_APPOINTMENT, (appointment) => {
       console.log('New post appointment:', appointment);
-      getAppointmentToDisplay();
+      getAppointmentsByDate(dateToUpdate);
     });
 
     socket.on(EVENT_PUT_APPOINTMENT, (appointment) => {
       console.log('New put appointment:', appointment);
-      getAppointmentToDisplay();
+      getAppointmentsByDate(dateToUpdate);
     });
 
     socket.on(EVENT_DELETE_APPOINTMENT, (appointment) => {
       console.log('New delete appointment:', appointment);
-      getAppointmentToDisplay();
+      getAppointmentsByDate(dateToUpdate);
     });
 
     // Limpiar listeners al desmontar
@@ -66,52 +77,92 @@ const ListAppointment = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isFocused) {
-      getAppointmentToDisplay();
-    }
-  }, [isFocused]);
+  /*
+    NAME: getCategorysByBussines
+    DESCRIPTION: Get the user's business categories
+    IMPUT: None
+    OUTPUT: None
+  */
+  const getCategorysByBussines = async () => {
+    console.log("-getCategorysByBussines-")
+    const resultAction = await dispatch(getCategoryByBusinessAPIAction(userData?.my_business?._id));
 
-  const getAppointmentToDisplay = () => {
-    dispatch(
+    if (getCategoryByBusinessAPIAction.fulfilled.match(resultAction)) {
+      if (resultAction.payload != undefined && resultAction.payload.length != 0) {
+        const categoryArray: CategoryDataType[] = Object.values(resultAction.payload);
+        setListCategory(categoryArray);
+      }
+    }
+  };
+
+  /*
+    NAME: getAppointmentToDisplay
+    DESCRIPTION: Get information about appointments for the current day
+    IMPUT: None
+    OUTPUT: None
+  */
+  const getAppointmentToDisplay = async () => {
+    console.log("-getAppointmentToDisplay-")
+    const resultAction = await dispatch(
       getApointmentsWithFiltersAPIAction({
         business_appointment: userData?.my_business,
         date_selected: new Date().toISOString(),
       })
     );
+
+    if (getApointmentsWithFiltersAPIAction.fulfilled.match(resultAction)) {
+      setResultToAppointment(resultAction.payload);
+    }
     setDateAppointmentSelected(new Date());
   };
 
-  useEffect(() => {
-    if (resultPutAppointment == true) {
-      dispatch(
-        getApointmentsWithFiltersAPIAction({
-          business_appointment: userData?.my_business,
-          date_selected: dateAppointmentSelected,
-        })
-      );
-      dispatch(resetPutAppointment());
-    }
-  }, [resultPutAppointment]);
+  /*
+    NAME: getAppointmentsByDate
+    DESCRIPTION: Get information about appointments for a specific day 
+    IMPUT: selectedItem: Date
+    OUTPUT: None
+  */
+  const getAppointmentsByDate = async (selectedItem: Date) => {
+    setDateAppointmentSelected(new Date(selectedItem));
 
-  useEffect(() => {
-    if (listAppointmentAPI != undefined && listAppointmentAPI.length != 0) {
-      const appointmentList: AppointmentDataType[] = Object.values(listAppointmentAPI);
-      setListAppointment(appointmentList);
-    }
-  }, [listAppointmentAPI]);
+    const resultAction = await dispatch(
+      getApointmentsWithFiltersAPIAction({
+        business_appointment: userData?.my_business,
+        date_selected: new Date(selectedItem)?.toISOString(),
+      })
+    );
 
-  useEffect(() => {
-    if (listCategoryAPI != undefined && listCategoryAPI.length != 0) {
-      const categoryArray: CategoryDataType[] = Object.values(listCategoryAPI);
-      setListCategory(categoryArray);
+    if (getApointmentsWithFiltersAPIAction.fulfilled.match(resultAction)) {
+      setResultToAppointment(resultAction.payload);
     }
-  }, [listCategoryAPI]);
-
-  const createNewAppointment = () => {
-    navigation.navigate("appointment");
   };
 
+  /*
+    NAME: setResultToAppointment
+    DESCRIPTION: Assign the value obtained from the database query to our local variable for display
+    IMPUT: payload: any
+    OUTPUT: None
+  */
+  const setResultToAppointment = async (payload: any) => {
+    if (payload != undefined && payload.length != 0) {
+      const appointmentList: AppointmentDataType[] = Object.values(payload);
+      setListAppointment(appointmentList);
+    }
+    else {
+      setListAppointment([]);
+    }
+  }
+
+  /*
+    SECTION: Interaction with view
+    DESCRIPTION: Methods for view logic
+    LIST:
+      - expandAllAppointment
+      - filterByCompleteOrNot
+      - filterByPendingApproved
+      - previusDay
+      - nextDay
+  */
   const expandAllAppointment = () => {
     setOpenAll(openAll === undefined || !openAll);
   };
@@ -142,29 +193,18 @@ const ListAppointment = () => {
     setSeeAppointmentByFilters(false);
   };
 
-  const changeDateAppointment = (selectedItem: Date) => {
-    setDateAppointmentSelected(new Date(selectedItem));
-
-    dispatch(
-      getApointmentsWithFiltersAPIAction({
-        business_appointment: userData?.my_business,
-        date_selected: new Date(selectedItem)?.toISOString(),
-      })
-    );
-  };
-
   const previusDay = () => {
     let date_previus: Date = dateAppointmentSelected;
     date_previus.setDate(date_previus.getDate() - 1);
 
-    changeDateAppointment(new Date(date_previus));
+    getAppointmentsByDate(new Date(date_previus));
   };
 
   const nextDay = () => {
     let date_previus: Date = dateAppointmentSelected;
     date_previus.setDate(date_previus.getDate() + 1);
 
-    changeDateAppointment(new Date(date_previus));
+    getAppointmentsByDate(new Date(date_previus));
   };
 
   return (
@@ -203,7 +243,7 @@ const ListAppointment = () => {
                   placeholder="Select the date to view appointments"
                   label="Select the date to view appointments"
                   value={dateAppointmentSelected}
-                  onChange={changeDateAppointment}
+                  onChange={getAppointmentsByDate}
                   mode="date"
                 />
               </View>
@@ -217,32 +257,32 @@ const ListAppointment = () => {
         {listAppointment?.length != 0 ?
           <Text>Total appointment: {listAppointment?.length}</Text> : undefined}
 
-            {listAppointment?.length != 0 ? (
-              <FlatList
-                data={listAppointment}
-                renderItem={({ item }) => (
-                  <View style={styles.appointmentItemContainer}>
-                    <AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={openAll} />
-                  </View>
-                )}
-                keyExtractor={(item) => item._id}
-                contentContainerStyle={styles.flatListContent}
-              />
-            ) : (
-              <View style={styles.containerWarning}>
-                <Text>No appointments were found for this day.</Text>
+        {listAppointment?.length != 0 ? (
+          <FlatList
+            data={listAppointment}
+            renderItem={({ item }) => (
+              <View style={styles.appointmentItemContainer}>
+                <AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={openAll} />
               </View>
             )}
-
-            <FAB
-              style={styles.fab}
-              icon="plus"
-              onPress={() => {
-                navigation.navigate("appointment", { fromRouter: 'ListAppointment' });
-              }}
-            />
-            <SumaryAppointment dateAppointmentSelected={dateAppointmentSelected} listAppointment={listAppointment} />
+            keyExtractor={(item) => item._id}
+            contentContainerStyle={styles.flatListContent}
+          />
+        ) : (
+          <View style={styles.containerWarning}>
+            <Text>No appointments were found for this day.</Text>
           </View>
+        )}
+
+        <FAB
+          style={styles.fab}
+          icon="plus"
+          onPress={() => {
+            navigation.navigate("appointment", { fromRouter: 'ListAppointment' });
+          }}
+        />
+        <SumaryAppointment dateAppointmentSelected={dateAppointmentSelected} listAppointment={listAppointment} />
+      </View>
     </PaperProvider>
   );
 };

@@ -3,7 +3,8 @@ import { INIT_VALUE_MODALS, MODAL_CREATE_SUB_CATEGORY, MODAL_CREATE_CATEGORY, MO
 import axios from "axios";
 import { createAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppointmentDataType, CategoryDataType, SubCategoryDataType } from "../../screens/types";
+import { AppointmentDataType } from "../../models/appointment";
+import { CategoryDataType, SubCategoryDataType } from "../../models/category";
 
 export const initialStateModalsAPIAction = createAction(INIT_VALUE_MODALS);
 

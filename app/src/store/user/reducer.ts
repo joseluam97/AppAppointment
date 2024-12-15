@@ -1,4 +1,3 @@
-import { AppointmentDataType, SubCategoryDataType, CategoryDataType, TimeAvailableForAppointment, UserDataType } from "../../screens/types";
 import { createReducer } from "@reduxjs/toolkit";
 import {
   loginUserAPIAction,
@@ -8,6 +7,7 @@ import {
   getMyClientsAPIAction,
   setUserMyProfileAPIAction
 } from "./actions";
+import { UserDataType } from "../../models/user";
 
 type InitialStateType = {
   loggedin: boolean | undefined;

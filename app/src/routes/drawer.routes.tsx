@@ -10,7 +10,7 @@ import ListBusiness from "../screens/business/listBusinessScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreRootState } from "../store/store";
 import CustomDrawerContent from "./children.routes";
-import Categories from "../screens/appointment/categoriesScreeen";
+import Categories from "../screens/category/categoriesScreeen";
 import MyBusiness from "../screens/business/myBusiness";
 import MyProfile from "../screens/user/myProfile";
 import MyClients from "../screens/business/myClients";
