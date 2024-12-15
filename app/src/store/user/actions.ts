@@ -36,30 +36,44 @@ export const putUserAPIAction = createAsyncThunk(
 );
 
 // LOGIN USER
-export const loginUserAPIAction = createAsyncThunk(LOGIN_USER, async (userInfo: { email: string; password: string }) => {
-  try {
-    // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
-    const urlUserLogin = `${urlUser}/login/`;
-    const response = await axios.post(urlUserLogin, {
-      email: userInfo.email,
-      password: userInfo.password,
-    });
-    
-    // Devuelve los datos del usuario si la solicitud es exitosa
-    return response.data;
-  } catch (error) {
-    // Maneja cualquier error que ocurra durante la solicitud
-    console.error("Error during login:", error);
-    throw error;
+export const loginUserAPIAction = createAsyncThunk(
+  LOGIN_USER,
+  async (userInfo: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      // Realiza una solicitud POST al servidor
+      const urlUserLogin = `${urlUser}/login/`;
+      const response = await axios.post(urlUserLogin, {
+        email: userInfo.email,
+        password: userInfo.password,
+      });
+
+      // Devuelve los datos del usuario si la solicitud es exitosa
+      return response.data;
+    } catch (error: any) {
+      // Maneja los errores específicos del servidor
+      if (error.response) {
+        console.error("Error during login:", error.response.data.error);
+        // Usa rejectWithValue para enviar el error al thunk
+        return rejectWithValue({
+          status: error.response.status,
+          message: error.response.data.error,
+        });
+      }
+
+      // Maneja errores de red u otros problemas
+      console.error("Network or unexpected error:", error.message);
+      return rejectWithValue({ status: null, message: "Network error or unexpected issue" });
+    }
   }
-});
+);
+
 
 export const getMyClientsAPIAction = createAsyncThunk(GET_MY_CLIENTS, async (idBusiness: string) => {
   try {
     // Realiza una solicitud POST a la ruta de inicio de sesión en tu servidor
     const urlUserByBusiness = `${urlUser}/byBusiness/${idBusiness}`;
     const response = await axios.get(urlUserByBusiness);
-    
+
     // Devuelve los datos del usuario si la solicitud es exitosa
     return response.data;
   } catch (error) {
@@ -74,6 +88,6 @@ export const getMyClientsAPIAction = createAsyncThunk(GET_MY_CLIENTS, async (idB
 export const setUserMyProfileAPIAction = createAsyncThunk(
   SET_USER_MY_PROFILE,
   async (userSelected: UserDataType) => {
-    return {userSelected};
+    return { userSelected };
   }
 );

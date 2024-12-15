@@ -120,12 +120,12 @@ userCtrl.loginUser = async (req, res) => {
 
     if (!userLogin) {
       console.error("The email address is not registered in the system.");
-      return res.status(404).send({ error: "The email address is not registered in the system." });
+      return res.status(400).send({ error: "The email address is not registered in the system." });
     }
 
     if (password !== userLogin.password) {
       console.error("The password is incorrect");
-      return res.status(404).send({ error: "The password is incorrect" });
+      return res.status(401).send({ error: "The password is incorrect" });
     }
 
     // Si llega hasta aquí, el usuario y la contraseña son correctos

@@ -25,48 +25,48 @@ const initialState: InitialStateType = {
   userData: undefined,
   resultPut: undefined,
   listMyClients: [],
-  
+
   // View my profile
   userSelected: undefined,
 };
 
 export default createReducer(initialState, (builder) => {
   builder
-  .addCase(initValue, () => {
-    return initialState;
-  })
-  .addCase(logUserAPIAction, () => {
-    return {
-      loggedin: undefined,
-      userData: undefined,
-    };
-  })
-  .addCase(getMyClientsAPIAction.fulfilled, (state, action) => {
-    return {
-      ...state,
-      listMyClients: { ...action.payload },
-    };
-  })
-  .addCase(putUserAPIAction.pending, (state, action) => {
-    return {
-      ...state,
-      resultPut: undefined,
-    };
-  })
-  .addCase(putUserAPIAction.fulfilled, (state, action) => {
-    return {
-      ...state,
-      resultPut: true,
-      userData: { ...action.payload },
-    };
-  })
-  .addCase(loginUserAPIAction.pending, (state, action) => {
-    return {
-      ...state,
-      loggedin: undefined,
-      userData: undefined,
-    };
-  })
+    .addCase(initValue, () => {
+      return initialState;
+    })
+    .addCase(logUserAPIAction, () => {
+      return {
+        loggedin: undefined,
+        userData: undefined,
+      };
+    })
+    .addCase(getMyClientsAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        listMyClients: { ...action.payload },
+      };
+    })
+    .addCase(putUserAPIAction.pending, (state, action) => {
+      return {
+        ...state,
+        resultPut: undefined,
+      };
+    })
+    .addCase(putUserAPIAction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        resultPut: true,
+        userData: { ...action.payload },
+      };
+    })
+    .addCase(loginUserAPIAction.pending, (state, action) => {
+      return {
+        ...state,
+        loggedin: undefined,
+        userData: undefined,
+      };
+    })
     .addCase(loginUserAPIAction.fulfilled, (state, action) => {
       return {
         ...state,
@@ -77,7 +77,7 @@ export default createReducer(initialState, (builder) => {
     .addCase(loginUserAPIAction.rejected, (state, action) => {
       return {
         ...state,
-        loggedin: false,
+        loggedin: undefined,
         userData: undefined,
       };
     })

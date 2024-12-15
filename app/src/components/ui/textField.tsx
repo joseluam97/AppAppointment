@@ -6,38 +6,37 @@ import { globalStyles as styles } from "../../constants";
 import { useController } from "react-hook-form";
 
 export default (props: TextFieldProps): JSX.Element => {
-  const { 
-    label, 
-    name, 
-    rules, 
-    defaultValue, 
-    trailingAccessory, 
-    showTrailingAccessoryAlways = false, 
-    keyboardType, // Nuevo: Tipo de teclado para el campo de entrada
-    mask, // Nuevo: Máscara para el campo de entrada
-    maxLength, // Nueva: Longitud máxima del campo de entrada
-    value,
-    onChangeText,
+  const {
+    label,
+    name,
+    rules,
+    defaultValue,
+    trailingAccessory,
+    showTrailingAccessoryAlways = false,
+    keyboardType,
+    mask,
+    maxLength,
     readOnly = false,
-    ...restOfProps 
+    ...restOfProps
   } = props;
 
+  // Integración con react-hook-form
   const {
-    field,
+    field: { onChange, onBlur, value },
     fieldState: { error },
   } = useController({ name, rules, defaultValue });
 
   const hasError: boolean = Boolean(error);
 
-  const trailingAccessoryElement = field.value?.length > 0 || showTrailingAccessoryAlways ? trailingAccessory : undefined;
+  const trailingAccessoryElement =
+    (value?.length > 0 || showTrailingAccessoryAlways) && trailingAccessory ? trailingAccessory : undefined;
 
   return (
     <View style={styleField.container}>
-      <Text style={styleField.label}>{label}</Text>
+      {label && <Text style={styleField.label}>{label}</Text>}
       <TextField
         {...restOfProps}
-        // TextField Props
-        label={props?.label ?? props?.placeholder}
+        label={label ?? props?.placeholder}
         floatOnFocus={true}
         floatingPlaceholder={true}
         style={[styleField.field, readOnly && styleField.readOnlyField]}
@@ -45,13 +44,13 @@ export default (props: TextFieldProps): JSX.Element => {
         validationMessagePosition={TextField.validationMessagePositions.TOP}
         validationMessage={hasError ? error?.message : undefined}
         trailingAccessory={trailingAccessoryElement}
-        //Value props
-        onChangeText={onChangeText}
-        value={value}
-        onBlur={field.onBlur}
-        // Nuevas propiedades para campos específicos
-        keyboardType={keyboardType} // Tipo de teclado para el campo de entrada
-        mask={mask} // Máscara para el campo de entrada
+        // Vinculando los eventos con react-hook-form
+        onChangeText={onChange} // Actualiza el estado del formulario
+        value={value} // Estado controlado por react-hook-form
+        onBlur={onBlur} // Maneja el evento onBlur
+        // Nuevas propiedades específicas
+        keyboardType={keyboardType}
+        mask={mask}
         maxLength={maxLength}
         editable={!readOnly}
       />
@@ -76,7 +75,7 @@ const styleField = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
     paddingLeft: 15,
-    
+
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -87,7 +86,7 @@ const styleField = StyleSheet.create({
     elevation: 5,
   },
   readOnlyField: {
-    backgroundColor: "#f0f0f0", // Color de fondo para campos de solo lectura
-    color: "#000", // Color de texto para campos de solo lectura
+    backgroundColor: "#f0f0f0",
+    color: "#000",
   },
 });

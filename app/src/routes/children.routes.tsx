@@ -49,7 +49,7 @@ const CustomDrawerContent = (props) => {
 
     <DrawerContentScrollView {...props}>
 
-<View style={styles.container}>
+      <View style={styles.container}>
         {/* Avatar con iniciales */}
         <Avatar.Text
           size={64}

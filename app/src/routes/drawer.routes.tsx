@@ -117,64 +117,70 @@ export function DrawerRoutes() {
   return (
     <PaperProvider>
       <View style={styles.container}>
-      <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />}>
+        <Drawer.Navigator
+          drawerContent={
+            (props) => exitsLogin ? (<CustomDrawerContent {...props} />) : undefined
+          }
+        >
+          {exitsLogin ? (
+            <>
+              <Drawer.Screen name="home" component={HomeScreen} options={{ title: "Home" }} />
+              <Drawer.Screen name="appointment" component={AddApointmentScreen} options={{ title: "Appointment" }} />
+              <Drawer.Screen name="settings" component={HomeScreen} options={{ title: "Settings" }} />
+              <Drawer.Screen name="categories" component={Categories} options={{ title: "Categories" }} />
+              <Drawer.Screen name="myClients" component={MyClients} options={{ title: "My Clients" }} />
+              <Drawer.Screen name="myProfile" component={MyProfile} options={{ title: "My Profile" }} />
+
+              <Drawer.Screen
+                name="listAppointment"
+                component={ListAppointmentScreen}
+                options={({ navigation }) => ({
+                  title: "List Appointment",
+                  headerRight: () => (
+                    <Menu
+                      visible={visibleMenuIndex}
+                      onDismiss={closeMenu}
+                      anchor={<IconButton icon="dots-vertical" onPress={() => openMenu()} />}
+                      style={{ marginTop: -40 }} // Ajuste de la posición vertical
+                    >
+                      <Menu.Item
+                        onPress={() => {
+                          createNewAppointment();
+                        }}
+                        title="Create new appointment"
+                      />
+                      <Menu.Item
+                        onPress={() => {
+                          seeDailySummary();
+                        }}
+                        title="See daily summary"
+                      />
+                    </Menu>
+                  ),
+                })}
+              />
+
+              <Drawer.Screen name="createBusiness" component={CreateBusiness} options={{ title: "Create your business" }} />
+              <Drawer.Screen name="myBusiness" component={MyBusiness} options={{ title: "my Business" }} />
+              <Drawer.Screen name="searchBusiness" component={ListBusiness} options={{ title: "Search Business" }} />
+              <Drawer.Screen name="logOut" component={LogOut} options={{ title: "Log Out" }} />
+            </>
+          ) : (
+            <Drawer.Screen name="login" component={LoginScreen} />
+          )}
+        </Drawer.Navigator>
+
         {exitsLogin ? (
-          <>
-            <Drawer.Screen name="home" component={HomeScreen} options={{ title: "Home" }} />
-            <Drawer.Screen name="appointment" component={AddApointmentScreen} options={{ title: "Appointment" }} />
-            <Drawer.Screen name="settings" component={HomeScreen} options={{ title: "Settings" }} />
-            <Drawer.Screen name="categories" component={Categories} options={{ title: "Categories" }} />
-            <Drawer.Screen name="myClients" component={MyClients} options={{ title: "My Clients" }} />
-            <Drawer.Screen name="myProfile" component={MyProfile} options={{ title: "My Profile" }} />
-
-            <Drawer.Screen
-              name="listAppointment"
-              component={ListAppointmentScreen}
-              options={({ navigation }) => ({
-                title: "List Appointment",
-                headerRight: () => (
-                  <Menu
-                    visible={visibleMenuIndex}
-                    onDismiss={closeMenu}
-                    anchor={<IconButton icon="dots-vertical" onPress={() => openMenu()} />}
-                    style={{ marginTop: -40 }} // Ajuste de la posición vertical
-                  >
-                    <Menu.Item
-                      onPress={() => {
-                        createNewAppointment();
-                      }}
-                      title="Create new appointment"
-                    />
-                    <Menu.Item
-                      onPress={() => {
-                        seeDailySummary();
-                      }}
-                      title="See daily summary"
-                    />
-                  </Menu>
-                ),
-              })}
-            />
-
-            <Drawer.Screen name="createBusiness" component={CreateBusiness} options={{ title: "Create your business" }} />
-            <Drawer.Screen name="myBusiness" component={MyBusiness} options={{ title: "my Business" }} />
-            <Drawer.Screen name="searchBusiness" component={ListBusiness} options={{ title: "Search Business" }} />
-            <Drawer.Screen name="logOut" component={LogOut} options={{ title: "Log Out" }} />
-          </>
-        ) : (
-          <Drawer.Screen name="login" component={LoginScreen} />
-        )}
-      </Drawer.Navigator>
-        
-        <BottomNavigation
-          navigationState={{ index, routes }}
-          onIndexChange={(newIndex) => {
-            setIndex(newIndex);
-            handleJumpTo(routes[newIndex].key);  // Navega solo cuando se selecciona una nueva pestaña
-          }}
-          renderScene={renderScene}  // Aquí renderizas el contenido de la pestaña
-          style={styles.bottomNavigation}
-        />
+          <BottomNavigation
+            navigationState={{ index, routes }}
+            onIndexChange={(newIndex) => {
+              setIndex(newIndex);
+              handleJumpTo(routes[newIndex].key);  // Navega solo cuando se selecciona una nueva pestaña
+            }}
+            renderScene={renderScene}  // Aquí renderizas el contenido de la pestaña
+            style={styles.bottomNavigation}
+          />
+        ) : undefined}
 
 
       </View>

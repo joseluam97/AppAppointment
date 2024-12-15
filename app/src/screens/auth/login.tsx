@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { View, Button, StyleSheet, Alert, ToastAndroid } from "react-native";
+import { View, Button, StyleSheet, Text, ToastAndroid } from "react-native";
 import { FormProvider, useForm } from "react-hook-form";
 import { Icons, RHFTextField } from "../../components";
 
@@ -17,6 +17,8 @@ export default function Login({ navigation }: any): JSX.Element {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
+  const [loginError, setLoginError] = useState<string | null>(null);
+
   const loggedin = useSelector((state: StoreRootState) => state?.user?.loggedin ?? undefined);
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
 
@@ -33,34 +35,32 @@ export default function Login({ navigation }: any): JSX.Element {
   };
 
   // ELIMINAR
-  useEffect(() => {
+  /*useEffect(() => {
     if (isFocused) {
-      // "jl" "jl2"
-
       dispatch(loginUserAPIAction({ email: "joseluastorga97@gmail.com", password: "1234" }));
       // dispatch(loginUserAPIAction({ email: "angelbenitez1997@gmail.com", password: "1234" }));
     }
-  }, [isFocused]);
+  }, [isFocused]);*/
 
   // DESCOMENTAR
-  /*useEffect(() => {
+  useEffect(() => {
     if (isFocused) {
       dispatch(initValue());
     }
-  }, [isFocused]);*/
+  }, [isFocused]);
 
   const reditToListAppointment = () => {
 
-      const delay = 4000; // 4 segundos en milisegundos
+    const delay = 4000; // 4 segundos en milisegundos
 
-      const timer = setTimeout(() => {
-        // Esta función se ejecutará después de 4 segundos
-        console.log('Han pasado 2 segundos');
-        navigation.navigate('listAppointment')
-      }, delay);
-  
-      // Es importante limpiar el temporizador para evitar fugas de memoria
-      return () => clearTimeout(timer);
+    const timer = setTimeout(() => {
+      // Esta función se ejecutará después de 4 segundos
+      console.log('Han pasado 2 segundos');
+      navigation.navigate('listAppointment')
+    }, delay);
+
+    // Es importante limpiar el temporizador para evitar fugas de memoria
+    return () => clearTimeout(timer);
 
   }
 
@@ -69,38 +69,59 @@ export default function Login({ navigation }: any): JSX.Element {
       if (loggedin == true) {
         showToast("Successful login");
         // Redit to list appointment
-        //reditToListAppointment();
+        //reditToListAppointment();s
       } else {
-        showToast("Successful failed");
+        showToast("Login failed");
         handleResetForm();
       }
     }
   }, [loggedin]);
 
-  const onLoginPress = (formData: any) => {
+  /*const onLoginPress = (formData: any) => {
 
-    dispatch(loginUserAPIAction({ email: formData.username, password: formData.password }));
+    dispatch(loginUserAPIAction({ email: formData.email, password: formData.password }));
+  };*/
+
+  const onLoginPress = async (formData: any) => {
+    const resultAction = await dispatch(
+      loginUserAPIAction({ email: formData.email, password: formData.password })
+    );
+
+    if (loginUserAPIAction.rejected.match(resultAction)) {
+      // Captura el error desde payload
+      const { status, message } = resultAction.payload || {};
+      setLoginError(`Error (${status || "Unknown"}): ${message}`);
+      setLoginError(`${message}`);
+    } else {
+      // Login exitoso
+      console.log("Login successful:", resultAction.payload);
+      setLoginError(null);
+    }
   };
 
   // #region Text Input Icons
-  const usernameIcon = <Icons iconSet="Ionicons" name="person-outline" color="#000000" size={16} style={styles.inputLeftIcon} />;
-
+  const emailIcon = <Icons iconSet="Ionicons" name="person-outline" color="#000000" size={16} style={styles.inputLeftIcon} />;
   const passwordIcon = <Icons iconSet="Ionicons" name="lock-closed-outline" color="#000000" size={16} style={styles.inputLeftIcon} />;
-  // #endregion
 
   const handleResetForm = () => {
-    form.reset(); // Esto restablecerá el contenido del formulario a sus valores iniciales
+    form.reset();
   };
 
   return (
     <View style={styles?.containerBase}>
       <FormProvider {...form}>
-        <RHFTextField name="username" placeholder="Username" rules={{ required: "Enter any username please!" }} leadingAccessory={usernameIcon} />
+        <RHFTextField name="email" placeholder="Email" leadingAccessory={emailIcon} />
 
-        <RHFTextField name="password" placeholder="Password" rules={{ required: "Enter any password please!" }} leadingAccessory={passwordIcon} secureTextEntry={true} />
+        <RHFTextField name="password" placeholder="Password" leadingAccessory={passwordIcon} secureTextEntry={true} />
       </FormProvider>
 
       <Button title="Login" onPress={() => form?.handleSubmit(onLoginPress)()} />
+
+      {loginError && (
+        <Text style={{ color: "red", marginTop: 10 }}>
+          {loginError}
+        </Text>
+      )}
     </View>
   );
 }

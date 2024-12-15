@@ -31,7 +31,7 @@ export default function LogOut({ navigation }: any): JSX.Element {
 
     const timer = setTimeout(() => {
       // Esta función se ejecutará después de 2 segundos
-      navigation.navigate('login')
+      //navigation.navigate('login')
     }, delay);
 
     // Es importante limpiar el temporizador para evitar fugas de memoria
