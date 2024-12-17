@@ -19,8 +19,6 @@ export default function MyClients({ navigation }: any) {
   const [visibleMenuIndex, setVisibleMenuIndex] = useState<number | null>(null);
 
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
-  const listMyClientsAPI = useSelector((state: StoreRootState) => state?.user?.listMyClients ?? undefined);
-  const nextAppointmentByUser = useSelector((state: StoreRootState) => state?.appointment?.nextAppointmentByUserAPI ?? undefined);
 
   /*
     NAME: useEffect[isFocused]
@@ -57,10 +55,13 @@ export default function MyClients({ navigation }: any) {
   */
   const seeNextAppointment = async (clientSelected: UserDataType) => {
     setVisibleMenuIndex(null);
+    console.log("clientSelected")
+    console.log(clientSelected)
+    console.log(userData?.my_business)
     const resultAction = await dispatch(
       getNextApointmentsByUserAndBussinesAPIAction({
         user_appointment: clientSelected,
-        business_appointment: userData?.my_business._id,
+        business_appointment: userData?.my_business,
       })
     );
 
@@ -111,11 +112,11 @@ export default function MyClients({ navigation }: any) {
     dispatch(
       getApointmentsByUserAndBussinesAPIAction({
         user_appointment: clientSelected,
-        business_appointment: clientSelected?.my_business,
+        business_appointment: userData?.my_business,
       })
     );
 
-    navigation.navigate('myProfile');
+    navigation.navigate('myProfile', {userRouter: clientSelected});
   }
 
   return (

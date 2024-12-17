@@ -1,15 +1,15 @@
 import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
-import { StoreRootState } from "../../../store/store";
+import { StoreRootState } from "../../store/store";
 import { PaperProvider, SegmentedButtons } from "react-native-paper";
-import AppointmentItem from "../../../components/ui/appointment_item";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { getAllCategoryAPIAction, getApointmentsByUserAndBussinesAPIAction } from "../../../store/appointment/actions";
-import AppointmentTable from "../../../components/ui/appointment_table";
-import { AppointmentDataType } from "../../../models/appointment";
-import { CategoryDataType } from "../../../models/category";
+import AppointmentItem from "../../components/ui/appointment_item";
+import { useIsFocused } from "@react-navigation/native";
+import { getAllCategoryAPIAction } from "../../store/appointment/actions";
+import AppointmentTable from "../../components/ui/appointment_table";
+import { AppointmentDataType } from "../../models/appointment";
+import { CategoryDataType } from "../../models/category";
+import React from "react";
 
 export default function UpcomingAppointment({ navigation }: any) {
   const dispatch = useDispatch<any>();
@@ -19,15 +19,23 @@ export default function UpcomingAppointment({ navigation }: any) {
   const [listAppointment, setListAppointment] = useState<AppointmentDataType[]>();
   const [listCategory, setListCategory] = useState<CategoryDataType[]>();
 
-  const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
-  const userSelectedAPI = useSelector((state: StoreRootState) => state?.user?.userSelected ?? undefined);
   const listAppointmentByUserAPI = useSelector((state: StoreRootState) => state?.appointment?.listAppointmentByUserAPI ?? []);
   const listCategoryAPI = useSelector((state: StoreRootState) => state?.appointment?.listCategoryAPI ?? []);
 
+  /*
+    NAME: useEffect[isFocused]
+    DESCRIPTION: When the screen loads
+  */
   useEffect(() => {
-    dispatch(getAllCategoryAPIAction());
-  }, []);
+    if(isFocused){
+      dispatch(getAllCategoryAPIAction());
+    }
+  }, [isFocused]);
 
+  /*
+    NAME: useEffect[listAppointmentByUserAPI]
+    DESCRIPTION: When the vector is updated the method is executed
+  */
   useEffect(() => {
     if (listAppointmentByUserAPI != undefined && listAppointmentByUserAPI.length != 0) {
       const appointmentList: AppointmentDataType[] = Object.values(listAppointmentByUserAPI);
@@ -35,6 +43,10 @@ export default function UpcomingAppointment({ navigation }: any) {
     }
   }, [listAppointmentByUserAPI]);
 
+  /*
+    NAME: useEffect[listCategoryAPI]
+    DESCRIPTION: When the vector is updated the method is executed
+  */
   useEffect(() => {
     if (listCategoryAPI != undefined && listCategoryAPI.length != 0) {
       const categoryArray: CategoryDataType[] = Object.values(listCategoryAPI);
@@ -45,35 +57,40 @@ export default function UpcomingAppointment({ navigation }: any) {
   return (
     <PaperProvider>
       <View style={styles.container}>
-        <SafeAreaView style={styles.container}>
-          <SegmentedButtons
-            value={valueSelectorView}
-            onValueChange={setValueSelectorView}
-            buttons={[
-              { value: "table", label: "Table" },
-              { value: "details", label: "Details" },
-            ]}
-          />
-        </SafeAreaView>
+        {listAppointment?.length != 0 ?
+          <>
+            <SafeAreaView style={styles.container}>
+              <SegmentedButtons
+                value={valueSelectorView}
+                onValueChange={setValueSelectorView}
+                buttons={[
+                  { value: "table", label: "Table" },
+                  { value: "details", label: "Details" },
+                ]}
+              />
+            </SafeAreaView>
 
-        {valueSelectorView == "table" ? (<AppointmentTable listAppointment={listAppointment} listCategory={listCategory} />) : null}
+            {valueSelectorView == "table" ? (
+              <AppointmentTable listAppointment={listAppointment} listCategory={listCategory} />
+            ) : null}
 
-        {valueSelectorView == "details" ? (listAppointment?.length != 0 ? (
-          <FlatList
-            data={listAppointment}
-            renderItem={({ item }) => (
-              <View style={styles.appointmentItemContainer}>
-                <AppointmentItem appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={true} enableActions={false} />
-              </View>
-            )}
-            keyExtractor={(item) => item._id}
-            contentContainerStyle={styles.flatListContent}
-          />
-        ) : (
+            {valueSelectorView == "details" ?
+              <FlatList
+                data={listAppointment}
+                renderItem={({ item }) => (
+                  <View style={styles.appointmentItemContainer}>
+                    <AppointmentItem key={item._id} appointment={item} type={item.type} user={item.user} listCategory={listCategory} valueOpenAll={true} enableActions={false} />
+                  </View>
+                )}
+                keyExtractor={(item) => item._id}
+                contentContainerStyle={styles.flatListContent}
+              />
+            : null}
+          </>
+          :
           <View style={styles.containerWarning}>
             <Text>No appointments found for this user.</Text>
-          </View>
-        )) : null }
+          </View>}
       </View>
     </PaperProvider>
   );

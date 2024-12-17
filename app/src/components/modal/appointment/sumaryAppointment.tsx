@@ -7,39 +7,46 @@ import { StoreRootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { modalViewSumaryAppointmentVisibleAPIAction } from "../../../store/modals/actions";
 
-const SumaryAppointment = ({dateAppointmentSelected, listAppointment}) => {
+const SumaryAppointment = ({ dateAppointmentSelected, listAppointment }) => {
   const dispatch = useDispatch<any>();
 
-    const [total_appointment, setTotal_appointment] = React.useState(0);
-    const [total_pending_appointment, setTotal_pending_appointment] = React.useState(0);
-    const [total_complete_appointment, setTotal_complete_appointment] = React.useState(0);
-    const [total_pending_approved_appointment, setTotal_pending_approved_appointment] = React.useState(0);
+  const [total_appointment, setTotal_appointment] = React.useState(0);
+  const [total_pending_appointment, setTotal_pending_appointment] = React.useState(0);
+  const [total_complete_appointment, setTotal_complete_appointment] = React.useState(0);
+  const [total_pending_approved_appointment, setTotal_pending_approved_appointment] = React.useState(0);
 
-    
   const modalViewSumaryAppointmentAPI = useSelector((state: StoreRootState) => state?.modals?.modalViewSumaryAppointment ?? undefined);
 
+  /*
+    NAME: useEffect[modalViewSumaryAppointmentAPI]
+    DESCRIPTION: When the appointment list is updated, the markers to be displayed are updated.
+  */
+  useEffect(() => {
+    if (listAppointment != undefined && listAppointment.length != 0) {
+      let total_appointment = listAppointment.length;
+      setTotal_appointment(total_appointment);
+
+      let total_pending_appointment: Number = listAppointment?.filter(element => element.complete == false).length;
+      setTotal_pending_appointment(total_pending_appointment);
+
+      let total_complete_appointment: Number = listAppointment?.filter(element => element.complete == true).length;
+      setTotal_complete_appointment(total_complete_appointment);
+
+      let total_pending_approved_appointment: Number = listAppointment?.filter(element => element.approved == false).length;
+      setTotal_pending_approved_appointment(total_pending_approved_appointment);
+    }
+  }, [modalViewSumaryAppointmentAPI]);
+
+  /*
+    NAME: hideDialog
+    DESCRIPTION: Action to hide the dialog
+  */
   const hideDialog = () => {
     dispatch(modalViewSumaryAppointmentVisibleAPIAction(false));
   }
 
-  useEffect(() => {
-    if (listAppointment != undefined && listAppointment.length != 0) {
-        let total_appointment = listAppointment.length;
-        setTotal_appointment(total_appointment);
-        
-        let total_pending_appointment: Number = listAppointment?.filter(element => element.complete == false).length;
-        setTotal_pending_appointment(total_pending_appointment);
-        
-        let total_complete_appointment: Number = listAppointment?.filter(element => element.complete == true).length;
-        setTotal_complete_appointment(total_complete_appointment);
-        
-        let total_pending_approved_appointment: Number = listAppointment?.filter(element => element.approved == false).length;
-        setTotal_pending_approved_appointment(total_pending_approved_appointment);
-    }
-  }, [modalViewSumaryAppointmentAPI]);
-
   return (
-    <Dialog visible={modalViewSumaryAppointmentAPI==true} onDismiss={hideDialog} style={styles.container}>
+    <Dialog visible={modalViewSumaryAppointmentAPI == true} onDismiss={hideDialog} style={styles.container}>
       <Dialog.Title>Summary of data for today's quotes: {DateFormatter(dateAppointmentSelected.toISOString())}</Dialog.Title>
       <Dialog.Content>
         <Text variant="titleMedium">Total number of appointments: {total_appointment}</Text>
@@ -55,11 +62,11 @@ const SumaryAppointment = ({dateAppointmentSelected, listAppointment}) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        width: "80%",
-        alignSelf: "center",
-        padding: 10,
-    }
-  });
+  container: {
+    width: "80%",
+    alignSelf: "center",
+    padding: 10,
+  }
+});
 
 export default SumaryAppointment;

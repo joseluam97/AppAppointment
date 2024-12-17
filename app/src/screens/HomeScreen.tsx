@@ -16,18 +16,6 @@ export default function HomeScreen({ navigation }: any) {
   const userData = useSelector((state: StoreRootState) => state?.user?.userData ?? undefined);
   const isFocused = useIsFocused();
 
-  function navToGallery() {
-    navigation.navigate("gallery");
-  }
-
-  function navToListAppointment() {
-    navigation.navigate("listAppointment");
-  }
-
-  function navToAddAppointment() {
-    navigation.navigate("appointment");
-  }
-
   useEffect(() => {
     if (loggedin == undefined || loggedin == false || userData == undefined) {
       navigation.navigate("login");

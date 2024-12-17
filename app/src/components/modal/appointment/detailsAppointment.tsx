@@ -16,21 +16,24 @@ const DetailsAppointment = () => {
   const [listCategory, setListCategory] = useState<CategoryDataType[]>();
 
   const modalViewDetailsAppointmentAPI = useSelector((state: StoreRootState) => state?.modals?.modalViewDetailsAppointment ?? false);
-  const modeViewDetailsAppointmentAPI = useSelector((state: StoreRootState) => state?.modals?.modeViewDetailsAppointment ?? false);
   const appointmentSelectedAPI = useSelector((state: StoreRootState) => state?.modals?.appointmentSelected ?? false);
 
   const listCategoryAPI = useSelector((state: StoreRootState) => state?.appointment?.listCategoryAPI ?? []);
 
-  const hideDialog = () => {
-    dispatch(modalViewDetailsAppointmentVisibleAPIAction({ isVisible: false}));
-  };
-
+  /*
+    NAME: useEffect[appointmentSelectedAPI]
+    DESCRIPTION: When the vector is updated the method is executed
+  */
   useEffect(() => {
     if(appointmentSelectedAPI != undefined){
       setAppointmentSelected(appointmentSelectedAPI);
     }
   }, [appointmentSelectedAPI]);
   
+  /*
+    NAME: useEffect[listCategoryAPI]
+    DESCRIPTION: When the vector is updated the method is executed
+  */
   useEffect(() => {
     if (listCategoryAPI != undefined && listCategoryAPI.length != 0) {
       const categoryArray: CategoryDataType[] = Object.values(listCategoryAPI);
@@ -38,6 +41,13 @@ const DetailsAppointment = () => {
     }
   }, [listCategoryAPI]);
 
+  /*
+    SECTION: Interaction with view
+    DESCRIPTION: Methods for view logic
+    LIST:
+      - formatIdCategoryToObject
+      - hideDialog
+  */
   const formatIdCategoryToObject = (idCategory: string) => {
     if (listCategory != undefined) {
       let listCategoryAPI: CategoryDataType[] = listCategory;
@@ -46,6 +56,10 @@ const DetailsAppointment = () => {
     }
   };
   
+  const hideDialog = () => {
+    dispatch(modalViewDetailsAppointmentVisibleAPIAction({ isVisible: false}));
+  };
+
   return (
     <Dialog visible={modalViewDetailsAppointmentAPI == true} onDismiss={() => hideDialog} style={styles.container}>
       <Dialog.Title>Appointment details</Dialog.Title>

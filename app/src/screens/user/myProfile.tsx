@@ -4,10 +4,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState, useRef } from "react";
 import { StoreRootState } from "../../store/store";
 import { getFullName, getLabelName } from "../../components/utils";
-import Information from "./capabilities/information";
-import AppointmentHistory from "./capabilities/appointment_history";
-import UpcomingAppointment from "./capabilities/upcoming_appointment";
-import Notes from "./capabilities/notes";
+import UpcomingAppointment from "./upcoming_appointment";
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { Avatar, Button, Card, Text, SegmentedButtons, BottomNavigation, Title, Paragraph } from "react-native-paper";
 import { DateFormatter } from "../../components/textFormatter";
@@ -15,21 +12,16 @@ import DetailsAppointment from "../../components/modal/appointment/detailsAppoin
 import { AppointmentDataType } from "../../models/appointment";
 import { UserDataType } from "../../models/user";
 
-export default function MyProfile({ navigation }: any) {
-  const dispatch = useDispatch<any>();
+export default function MyProfile({ navigation, route }: any) {
+  const { userRouter } = route.params || {};
   
   const [numAppointmentCompleted, setNumAppointmentCompleted] = useState<number>(0);
-  const [userSelected, setUserSelected] = useState<UserDataType>(undefined);
-
-  const userSelectedAPI = useSelector((state: StoreRootState) => state?.user?.userSelected ?? undefined);
   const listAppointmentByUserAPI = useSelector((state: StoreRootState) => state?.appointment?.listAppointmentByUserAPI ?? []);
-
-  useEffect(() => {
-    if (userSelectedAPI != undefined) {
-      setUserSelected(userSelectedAPI);
-    }
-  }, [userSelectedAPI]);
   
+  /*
+    NAME: useEffect[listAppointmentByUserAPI]
+    DESCRIPTION: When the vector is updated the method is executed
+  */
   useEffect(() => {
     if (listAppointmentByUserAPI != undefined) {
       const appointmentList: AppointmentDataType[] = Object.values(listAppointmentByUserAPI);
@@ -38,9 +30,15 @@ export default function MyProfile({ navigation }: any) {
     }
   }, [listAppointmentByUserAPI]);
 
+  /*
+    NAME: getBirthday
+    DESCRIPTION: From a date you get a string
+    IMPUT: date_birth: Date
+    OUTPUT: None
+  */
   const getBirthday = (date_birth: Date) => {
-    if(date_birth != undefined && date_birth != null){
-      const let_day_birth: Date = new Date(userSelected?.date_birth);
+    if(userRouter != undefined && date_birth != undefined && date_birth != null){
+      const let_day_birth: Date = new Date(userRouter?.date_birth);
       return DateFormatter(let_day_birth.toISOString());
     }
     else{
@@ -53,15 +51,15 @@ export default function MyProfile({ navigation }: any) {
       <Card style={styles.card}>
           <Card.Content>
             <View style={styles.header}>
-              <Avatar.Text size={50} label={getLabelName(userSelected)} />
+              <Avatar.Text size={50} label={getLabelName(userRouter)} />
               <View style={styles.info}>
-                <Title>{getFullName(userSelected)}</Title>
-                <Text style={styles.email}>{userSelected?.email}</Text>
+                <Title>{getFullName(userRouter)}</Title>
+                <Text style={styles.email}>{userRouter?.email}</Text>
               </View>
             </View>
             <View style={styles.details}>
-              <Paragraph><Text style={styles.label}>Birthdate: </Text> {getBirthday(userSelected?.date_birth)}</Paragraph>
-              <Paragraph><Text style={styles.label}>Address: </Text> {userSelected?.address}</Paragraph>
+              <Paragraph><Text style={styles.label}>Birthdate: </Text> {getBirthday(userRouter?.date_birth)}</Paragraph>
+              <Paragraph><Text style={styles.label}>Address: </Text> {userRouter?.address}</Paragraph>
               <Paragraph><Text style={styles.label}>Number of Appointments Completed: </Text> {numAppointmentCompleted}</Paragraph>
             </View>
           </Card.Content>

@@ -6,15 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="5f12d9c2-4d98-4794-850a-dd501e31cc0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/components/modal/createSubCategory.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/components/modal/createSubCategory.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/components/modal/sumaryAppointment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/components/modal/sumaryAppointment.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/components/ui/appointment_item.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/components/ui/appointment_item.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/components/ui/subCategory_item.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/components/ui/subCategory_item.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/routes/children.routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/routes/children.routes.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/components/modal/appointment/detailsAppointment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/components/modal/appointment/detailsAppointment.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/components/modal/appointment/sumaryAppointment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/components/modal/appointment/sumaryAppointment.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/components/ui/appointment_table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/components/ui/appointment_table.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/screens/HomeScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/screens/HomeScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/screens/appointment/categoriesScreeen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/screens/appointment/categoriesScreeen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/screens/appointment/listAppointmentScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/screens/appointment/listAppointmentScreen.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/screens/business/myClients.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/screens/business/myClients.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/screens/user/capabilities/appointment_history.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/screens/user/capabilities/information.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/screens/user/capabilities/notes.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/screens/user/capabilities/upcoming_appointment.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/screens/user/myProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/screens/user/myProfile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
