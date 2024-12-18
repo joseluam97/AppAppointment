@@ -1,0 +1,42 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run app.js in api folder",
+            "type": "shell",
+            "command": "node app.js",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
+            "label": "Expo Prebuild",
+            "type": "shell",
+            "command": "npx expo prebuild",
+            "options": {
+                "cwd": "${workspaceFolder}/app"
+            }
+        },
+        {
+            "label": "Expo Run Android",
+            "type": "shell",
+            "command": "npx expo run:android",
+            "options": {
+                "cwd": "${workspaceFolder}/app"
+            }
+        },
+        {
+            "label": "Prebuild and Run Android",
+            "dependsOn": [
+                "Expo Prebuild",
+                "Expo Run Android"
+            ],
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        }
+    ]
+}
