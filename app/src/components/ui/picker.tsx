@@ -48,9 +48,9 @@ const MyPicker = <T extends unknown>({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#f0f0f0',
+    marginVertical: 5,
+    paddingHorizontal: 1,
+    backgroundColor: '#ffffff',
     borderRadius: 10,
   },
   label: {

@@ -94,7 +94,7 @@ businessCtrl.getBusinessById = async (req, res) => {
     const idBusiness = req.params.id;
 
     // Obtener información básica del business
-    const business = await Businesss.findById(idBusiness);
+    const business = await Businesss.findById(idBusiness).populate('scheudable');
 
     if (!business) {
       return res.status(404).json({ error: "Business no encontrado" });

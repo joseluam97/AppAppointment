@@ -5,13 +5,12 @@ import LoginScreen from "../screens/auth/login";
 import AddApointmentScreen from "../screens/appointment/addAppointmentScreen";
 import ListAppointmentScreen from "../screens/appointment/listAppointmentScreen";
 import LogOut from "../screens/auth/logOut";
-import CreateBusiness from "../screens/business/createBusiness";
+import ViewBusiness from "../screens/business/viewBusiness";
 import ListBusiness from "../screens/business/listBusinessScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreRootState } from "../store/store";
 import CustomDrawerContent from "./children.routes";
 import Categories from "../screens/category/categoriesScreeen";
-import MyBusiness from "../screens/business/myBusiness";
 import MyProfile from "../screens/user/myProfile";
 import MyClients from "../screens/business/myClients";
 import { Avatar, BottomNavigation, Card, IconButton, Menu, Provider as PaperProvider } from "react-native-paper";
@@ -19,7 +18,6 @@ import { modalViewSumaryAppointmentVisibleAPIAction } from "../store/modals/acti
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View } from "react-native";
 import { useEffect, useState, useRef } from "react";
-import AppointmentHistory from "../screens/user/capabilities/appointment_history";
 
 const Drawer = createDrawerNavigator();
 
@@ -53,7 +51,7 @@ export function DrawerRoutes() {
         navigation.navigate("listAppointment");
         break;
       case "myProfile":
-        navigation.navigate("myProfile");
+        navigation.navigate('myProfile', { userRouter: userData });
         break;
       case "myClients":
         navigation.navigate("myClients");
@@ -141,7 +139,7 @@ export function DrawerRoutes() {
                       visible={visibleMenuIndex}
                       onDismiss={closeMenu}
                       anchor={<IconButton icon="dots-vertical" onPress={() => openMenu()} />}
-                      style={{ marginTop: -40 }} // Ajuste de la posición vertical
+                      style={{ marginTop: 0 }} // Ajuste de la posición vertical
                     >
                       <Menu.Item
                         onPress={() => {
@@ -160,8 +158,7 @@ export function DrawerRoutes() {
                 })}
               />
 
-              <Drawer.Screen name="createBusiness" component={CreateBusiness} options={{ title: "Create your business" }} />
-              <Drawer.Screen name="myBusiness" component={MyBusiness} options={{ title: "my Business" }} />
+              <Drawer.Screen name="viewBusiness" component={ViewBusiness} options={{ title: "Create your business" }} />
               <Drawer.Screen name="searchBusiness" component={ListBusiness} options={{ title: "Search Business" }} />
               <Drawer.Screen name="logOut" component={LogOut} options={{ title: "Log Out" }} />
             </>

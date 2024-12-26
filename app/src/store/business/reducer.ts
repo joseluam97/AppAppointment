@@ -2,7 +2,9 @@ import { createReducer } from "@reduxjs/toolkit";
 import {
   postBussinesAPIAction,
   initValueBusiness,
-  getAllBusinessAPIAction
+  getAllBusinessAPIAction,
+  getBusinessByIdAPIAction,
+  putBussinesAPIAction
 } from "./actions";
 import { BusinessDataType } from "../../models/business";
 
@@ -39,6 +41,17 @@ export default createReducer(initialState, (builder) => {
     return {
       ...state,
       resultPost: true,
+    };
+  })
+  .addCase(putBussinesAPIAction.fulfilled, (state, action) => {
+    return {
+      ...state,
+    };
+  })
+  .addCase(getBusinessByIdAPIAction.fulfilled, (state, action) => {
+    return {
+      ...state,
+      bussines_user: { ...action.payload },
     };
   })
     .addDefaultCase((state) => {

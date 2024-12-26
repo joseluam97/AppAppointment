@@ -88,13 +88,13 @@ const CustomDrawerContent = (props) => {
 
           {!exitsBussines && (<DrawerItem
             label="Add your business"
-            onPress={() => props.navigation.navigate('createBusiness')}
+            onPress={() => props.navigation.navigate('viewBusiness', { modeView: 'create'})}
           />
           )}
 
           {exitsBussines && (<DrawerItem
             label="My Business"
-            onPress={() => props.navigation.navigate('myBusiness')}
+            onPress={() => props.navigation.navigate('viewBusiness', { modeView: 'details'})}
           />
           )}
         </View>

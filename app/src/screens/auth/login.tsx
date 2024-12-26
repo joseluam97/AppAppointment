@@ -35,19 +35,19 @@ export default function Login({ navigation }: any): JSX.Element {
   };
 
   // ELIMINAR
-  /*useEffect(() => {
+  useEffect(() => {
     if (isFocused) {
       dispatch(loginUserAPIAction({ email: "joseluastorga97@gmail.com", password: "1234" }));
       // dispatch(loginUserAPIAction({ email: "angelbenitez1997@gmail.com", password: "1234" }));
     }
-  }, [isFocused]);*/
+  }, [isFocused]);
 
   // DESCOMENTAR
-  useEffect(() => {
+  /*useEffect(() => {
     if (isFocused) {
       dispatch(initValue());
     }
-  }, [isFocused]);
+  }, [isFocused]);*/
 
   const reditToListAppointment = () => {
 

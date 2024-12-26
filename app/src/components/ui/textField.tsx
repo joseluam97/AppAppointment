@@ -63,8 +63,8 @@ export default (props: TextFieldProps): JSX.Element => {
 
 const styleField = StyleSheet.create({
   container: {
-    marginVertical: 10,
-    paddingHorizontal: 20,
+    marginVertical: 5,
+    paddingHorizontal: 1,
     backgroundColor: "#fff",
     borderRadius: 10,
   },
